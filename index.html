@@ -544,7 +544,7 @@ const S = {
   uid:null, isOwnerAdmin:false, auth:'unknown', email:'', authMsg:'', setup:null,
   leads:{}, settings:clone(DEFAULT_SETTINGS), members:{}, membersLoaded:false, leadsLoaded:false,
   localRole:{role:'admin',partnerId:'p1'},
-  ui:{ pf:'all', search:'', filters:{}, showFilters:false, sort:'due', dashMonth:thisMonth(), repMonth:thisMonth(), calMonth:thisMonth(),
+  ui:{ pf:'all', chase:'mine', search:'', filters:{}, showFilters:false, sort:'due', dashMonth:thisMonth(), repMonth:thisMonth(), calMonth:thisMonth(),
        noteTab:{}, preview:null, skipSeat:false, navOpen:false },
   keep:{},                 // composer drafts that survive re-renders
   form:null,               // lead form draft
@@ -744,13 +744,18 @@ function bucket(l){
   if(d<0) return 'overdue'; if(d===0) return 'today'; if(d===1) return 'tomorrow'; if(d<=7) return 'week'; return 'upcoming';
 }
 function allLeads(){ return Object.values(S.leads); }
+// Every lead is visible to the whole team. The top-bar filter narrows the view.
+const isMine = (l,p) => !!p && (l.partnerId===p || l.backupPartnerId===p || l.accountManagerId===p);
 function scoped(){
   let L = allLeads();
-  if(!isAdmin()){ const p = myPid(); L = L.filter(l=>p && (l.partnerId===p || l.backupPartnerId===p || l.accountManagerId===p)); }
-  else if(S.ui.pf==='none') L = L.filter(l=>!l.partnerId);
+  if(S.ui.pf==='none') L = L.filter(l=>!l.partnerId);
+  else if(S.ui.pf==='mine') L = L.filter(l=>isMine(l,myPid()));
   else if(S.ui.pf!=='all') L = L.filter(l=>l.partnerId===S.ui.pf);
   return L;
 }
+// Chase lists (dashboard actions, follow-ups, calendar) default to your own leads.
+function chaseScoped(){ const L = scoped(), p = myPid(); return (S.ui.chase==='all' || !p) ? L : L.filter(l=>isMine(l,p)); }
+function chaseToggle(){ if(!myPid()) return ''; return `<div class="tabs" role="group" aria-label="Whose actions to show"><button class="${S.ui.chase!=='all'?'on':''}" data-a="chase" data-v="mine" aria-pressed="${S.ui.chase!=='all'}">Mine</button><button class="${S.ui.chase==='all'?'on':''}" data-a="chase" data-v="all" aria-pressed="${S.ui.chase==='all'}">Everyone</button></div>`; }
 function funnelFor(L){ return FUNNEL.map(([label,r])=>[label, r===0 ? L.length : L.filter(l=>reached(l)>=r).length]); }
 function statsFor(L){
   return { leads:L.length, active:L.filter(isActive).length, contacted:L.filter(l=>reached(l)>=2).length, meetings:L.filter(l=>reached(l)>=3).length,
@@ -857,14 +862,14 @@ function render(){
   if(r.name==='leads') renderLeadResults();
 }
 function shell(content, r){
-  const fu = scoped().filter(l=>['overdue','today'].includes(bucket(l))).length;
+  const fu = chaseScoped().filter(l=>['overdue','today'].includes(bucket(l))).length;
   const m = me();
   const nav = NAV.map(([k,l,i])=>`<a href="#/${k}" class="${r.name===k||(k==='leads'&&['lead','new','import'].includes(r.name))?'on':''}" title="${l}">${ic(i)}<span>${l}</span>${k==='followups'&&fu?`<b class="count">${fu}</b>`:''}</a>`).join('');
   const roleLabel = S.ui.preview ? 'Previewing as '+roleName(partner(S.ui.preview)?.role).toLowerCase() : (m.role==='admin' ? 'Admin' : roleName(partner(m.partnerId)?.role)) + (S.mode==='local' ? ' (this browser)' : '');
   const bottom = [['dashboard','Today','dash'],['leads','Leads','leads'],['pipeline','Pipeline','pipe'],['followups','Follow-ups','follow']]
     .map(([k,l,i])=>`<a href="#/${k}" class="${r.name===k||(k==='leads'&&r.name==='lead')?'on':''}">${ic(i,20)}${l}${k==='followups'&&fu?`<b class="count">${fu}</b>`:''}</a>`).join('')
     + `<button data-a="moremenu" class="${['calendar','reports','partners','settings'].includes(r.name)?'on':''}">${ic('more',20)}More</button>`;
-  const pf = isAdmin() ? `<select class="input pf" data-c="pf" aria-label="Show leads for" style="width:auto;max-width:190px">${opts([['all','Everyone'],...teamOpts(),['none','Unassigned']], S.ui.pf)}</select>` : '';
+  const pf = true ? `<select class="input pf" data-c="pf" aria-label="Show leads for" style="width:auto;max-width:190px">${opts([['all','Everyone'],...(myPid()?[['mine','My leads']]:[]),...teamOpts(),['none','Unassigned']], S.ui.pf)}</select>` : '';
   return `
   <div class="app">
     <aside class="side ${S.ui.navOpen?'open':''}">
@@ -901,12 +906,12 @@ function seatView(adminToo){
 
 /* ---------- Dashboard ---------- */
 function dashView(){
-  const L = scoped(), T = today();
+  const L = scoped(), C = chaseScoped(), T = today();
   if(!allLeads().length) return firstRunView();
-  const over = L.filter(l=>bucket(l)==='overdue').sort((a,b)=>a.next.due.localeCompare(b.next.due));
-  const due = L.filter(l=>bucket(l)==='today');
-  const upc = L.filter(l=>['tomorrow','week'].includes(bucket(l))).sort((a,b)=>a.next.due.localeCompare(b.next.due));
-  const meetingsWeek = L.filter(l=>isActive(l) && l.next?.type==='Meeting' && l.next.due>=T && diffDays(l.next.due,T)<=7).length;
+  const over = C.filter(l=>bucket(l)==='overdue').sort((a,b)=>a.next.due.localeCompare(b.next.due));
+  const due = C.filter(l=>bucket(l)==='today');
+  const upc = C.filter(l=>['tomorrow','week'].includes(bucket(l))).sort((a,b)=>a.next.due.localeCompare(b.next.due));
+  const meetingsWeek = C.filter(l=>isActive(l) && l.next?.type==='Meeting' && l.next.due>=T && diffDays(l.next.due,T)<=7).length;
   const p = myPid();
   const mine = allLeads().filter(l=>p && l.partnerId===p && isActive(l)).length;
   const cm = thisMonth();
@@ -927,7 +932,7 @@ function dashView(){
   ];
   const hr = new Date().getHours(), hello = hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
   const who = p ? pname(p) : 'team';
-  const missing = L.filter(l=>issues(l).length);
+  const missing = C.filter(l=>issues(l).length);
   const sumParts = [];
   if(over.length) sumParts.push(`<b class="r">${over.length} overdue</b>`);
   sumParts.push(`<b class="a">${due.length} due today</b>`);
@@ -937,7 +942,7 @@ function dashView(){
   return `
   <section class="hero">
     <div><p class="hello">${hello}, ${esc(who)}. It's ${fmtLong(T)}.</p><h1>Who to chase today</h1><p class="chase-sum">${sumParts.join(', ')}.</p></div>
-    <div class="row"><a class="btn" href="#/followups">${ic('follow',17)} All follow-ups</a></div>
+    <div class="row">${chaseToggle()}<a class="btn" href="#/followups">${ic('follow',17)} All follow-ups</a></div>
   </section>
   ${missing.length ? `<div class="warnbar">${ic('alert',18)} <span>${missing.length} active lead${missing.length>1?'s are':' is'} missing an owner, next action or due date.</span><a class="btn sm" href="#/followups">Fix now</a></div>`:''}
   <div class="kpis">${kp.map(([l,v,c,k])=>`<button class="kpi ${c}" data-a="kpi" data-k="${k}"><span class="v">${v}</span><span class="l">${l}</span></button>`).join('')}</div>
@@ -953,7 +958,7 @@ function dashView(){
       ${monthCard()}
     </div>
   </div>
-  ${isAdmin() || S.mode==='local' ? `<section class="card mt24">${partnerSummary()}</section>` : ''}`;
+  <section class="card mt24">${partnerSummary()}</section>`;
 }
 function firstRunView(){
   const canSeed = isAdmin();
@@ -998,7 +1003,7 @@ function partnerSummary(){
 
 /* ---------- Leads ---------- */
 const FILTER_DEFS = () => [
-  ...(isAdmin()?[['partner','Assigned to',[['none','Unassigned'],...teamOpts()]]]:[]),
+  ['partner','Assigned to',[['none','Unassigned'],...teamOpts()]],
   ['am','Account manager',[['none','None'],...teamOpts()]],
   ['status','Status',STAGES.map(s=>[s.k,s.l])],
   ['state','Converted / active / lost',[['active','Active'],['converted','Converted'],['lost','Lost (rejected)'],['parked','Not now'],['unresponsive','Unresponsive']]],
@@ -1054,7 +1059,7 @@ function renderLeadResults(){
   const c = $('#leadCount'); if(c) c.textContent = `${L.length} of ${scoped().length} leads${isAdmin()&&S.ui.pf!=='all'?' for '+(S.ui.pf==='none'?'Unassigned':pname(S.ui.pf)):''}`;
   if(!L.length){
     box.innerHTML = scoped().length ? empty('No leads match', 'Try a different search or clear the filters.', `<button class="btn" data-a="clearfilters">Clear filters</button>`)
-      : empty(isAdmin()?'Add your first prospect':'No leads assigned to you.', isAdmin()?'Leads you add or import will appear here.':'When an admin assigns a lead to you it shows up here.', `<a class="btn pri" href="#/new">${ic('plus',17)} Add lead</a>`);
+      : empty(S.ui.pf==='mine'?'No leads assigned to you.':'Add your first prospect', S.ui.pf==='mine'?'Switch the filter to Everyone to see the whole team\'s leads.':'Leads you or your team add will appear here.', `<a class="btn pri" href="#/new">${ic('plus',17)} Add lead</a>`);
     return;
   }
   const rows = L.map(l=>{ const c = contact(l); const iss = issues(l); return `<tr data-a="open" data-id="${l.id}">
@@ -1076,7 +1081,6 @@ function leadView(r){
   if(r.sub==='edit') return formView(r.id);
   const l = S.leads[r.id];
   if(!l) return empty('Lead not found', 'It may have been deleted or you may not have access.', `<a class="btn" href="#/leads">Back to leads</a>`);
-  if(!isAdmin() && !canEdit(l)) return empty('This lead is assigned to another partner', '', `<a class="btn" href="#/leads">Back to leads</a>`);
   const c = contact(l), ed = canEdit(l), iss = issues(l);
   const nd = l.next?.due ? dueClass(l.next.due) : '';
   const acts = [...(l.activities||[])].sort((a,b)=>b.at.localeCompare(a.at));
@@ -1123,6 +1127,7 @@ function leadView(r){
   </div>
   <div class="qa">${qa}</div>
   ${statusBanner}
+  ${!ed ? `<div class="banner grey">${ic('user',15)} Owned by <b>${esc(pname(l.partnerId))}</b>. You can view everything; changes are made by the owner, backup owner, account manager or an admin.</div>` : ''}
   <div class="ldgrid">
     <div class="stack">
       ${nextBlock}
@@ -1358,7 +1363,7 @@ function applyStage(id, stage, x){
 
 /* ---------- Follow-ups ---------- */
 function followView(){
-  const L = scoped();
+  const L = chaseScoped();
   const secs = [['overdue','Overdue','over'],['today','Due today','today'],['tomorrow','Tomorrow',''],['week','This week',''],['upcoming','Upcoming',''],['none','No follow-up set','none']];
   const by = k => L.filter(l=>bucket(l)===k).sort((a,b)=>(a.next?.due||'').localeCompare(b.next?.due||''));
   const parked = L.filter(l=>bucket(l)==='parked').length;
@@ -1366,7 +1371,7 @@ function followView(){
     const msg = {overdue:'Great! You have no overdue follow-ups.',today:'Nothing due today.',none:'Every active lead has a next step.'}[k];
     return `<section class="fsec" id="sec-${k}"><div class="fsec-h"><h2 style="${k==='overdue'&&list.length?'color:var(--red)':''}">${title}</h2><span class="n">${list.length}</span></div>
     ${list.length ? list.map(l=>fitem(l,cls)).join('') : `<p class="small muted">${msg}</p>`}</section>`; };
-  return `<div class="page-h"><div><h1>Follow-ups</h1><p>${L.filter(l=>['overdue','today'].includes(bucket(l))).length} to handle today.${parked?` ${parked} parked "not now" lead${parked>1?'s':''} will reappear here on their re-contact date.`:''}</p></div></div>
+  return `<div class="page-h"><div><h1>Follow-ups</h1><p>${L.filter(l=>['overdue','today'].includes(bucket(l))).length} to handle today.${parked?` ${parked} parked "not now" lead${parked>1?'s':''} will reappear here on their re-contact date.`:''}</p></div>${chaseToggle()}</div>
   ${secs.map(sec).join('')}`;
 }
 function fitem(l, cls){
@@ -1382,7 +1387,7 @@ function fitem(l, cls){
 /* ---------- Calendar ---------- */
 function calEvents(){
   const ev = [];
-  scoped().forEach(l=>{
+  chaseScoped().forEach(l=>{
     if(l.next?.due && needsNext(l)){ const t = l.next.type; const cls = t==='Meeting'?'meeting':t==='Proposal'?'proposal':t==='Re-contact'?'recontact':'followup';
       ev.push({d:l.next.due, id:l.id, cls: dueClass(l.next.due)==='over'?'over':cls, label:`${t}: ${l.company}`}); }
     if(l.meetingDate && !(l.next?.type==='Meeting' && l.next.due===l.meetingDate)) ev.push({d:l.meetingDate,id:l.id,cls:'meeting',label:`Meeting: ${l.company}`});
@@ -1398,7 +1403,7 @@ function calView(){
   const cells = days.map(d=>{ const list = byDay[d]||[]; return `<div class="day ${monthOf(d)!==m?'out':''} ${d===T?'td':''}"><span class="dn">${parseD(d).getDate()}</span>${list.slice(0,4).map(e=>`<button class="ev ${e.cls}" data-a="open" data-id="${e.id}" title="${esc(e.label)}">${esc(e.label)}</button>`).join('')}${list.length>4?`<button class="ev more" data-a="calday" data-d="${d}">+${list.length-4} more</button>`:''}</div>`; }).join('');
   const agendaDays = Object.keys(byDay).filter(d=>monthOf(d)===m).sort();
   return `<div class="page-h"><div><h1>Calendar</h1><p>Meetings, calls, follow-ups, proposals and re-contact dates.</p></div>
-    <div class="row"><button class="btn icon" data-a="calmove" data-n="-1" aria-label="Previous month">${ic('back')}</button><b style="min-width:150px;text-align:center;font-family:var(--display);font-size:18px">${monthLabel(m)}</b><button class="btn icon" data-a="calmove" data-n="1" aria-label="Next month">${ic('fwd')}</button><button class="btn" data-a="caltoday">Today</button></div></div>
+    <div class="row wrap">${chaseToggle()}<button class="btn icon" data-a="calmove" data-n="-1" aria-label="Previous month">${ic('back')}</button><b style="min-width:150px;text-align:center;font-family:var(--display);font-size:18px">${monthLabel(m)}</b><button class="btn icon" data-a="calmove" data-n="1" aria-label="Next month">${ic('fwd')}</button><button class="btn" data-a="caltoday">Today</button></div></div>
   <div class="legend" style="margin-bottom:10px;flex-wrap:wrap"><span><i style="background:var(--violet)"></i>Meeting</span><span><i style="background:var(--accent)"></i>Call or follow-up</span><span><i style="background:var(--amber)"></i>Proposal</span><span><i style="background:var(--red)"></i>Overdue</span><span><i style="border:1px dashed var(--muted)"></i>Re-contact</span></div>
   <div class="cal">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="dow">${d}</div>`).join('')}${cells}</div>
   <div class="agenda">${agendaDays.length ? agendaDays.map(d=>`<div class="aday" id="day-${d}"><h3>${d===T?'Today, ':''}${fmtD(d)}</h3>${byDay[d].map(e=>`<button class="ev ${e.cls}" data-a="open" data-id="${e.id}">${esc(e.label)}</button>`).join('')}</div>`).join('') : empty('Nothing scheduled this month','','')}</div>`;
@@ -1452,7 +1457,7 @@ function memberCard(p, all){
     <div class="pstats">${stats.map(([a,b])=>`<div><b style="${a==='Overdue'&&b?'color:var(--red)':''}">${b}</b><span>${a}</span></div>`).join('')}</div>
     ${!isAM && clients.length?`<p class="small">Account manager for <b>${clients.length}</b> client${clients.length>1?'s':''}.</p>`:''}
     ${!isAM?`<div class="row between small mt8"><span>Conversion rate</span><b>${pct(s.converted,s.leads)}%</b></div><div class="progress mt8"><b style="width:${pct(s.converted,s.leads)}%;background:${mcolor(p.id)}"></b></div>`:''}
-    <div class="row wrap mt16">${isAdmin()?`<button class="btn sm" data-a="filterpartner" data-id="${p.id}">Show only ${esc(p.name.split(' ')[0])}</button>`:''}<button class="btn sm ghost" data-a="${isAM?'amleads':'partnerleads'}" data-id="${p.id}">${isAM?'View clients':'View leads'}</button></div></section>`;
+    <div class="row wrap mt16">${true?`<button class="btn sm" data-a="filterpartner" data-id="${p.id}">Show only ${esc(p.name.split(' ')[0])}</button>`:''}<button class="btn sm ghost" data-a="${isAM?'amleads':'partnerleads'}" data-id="${p.id}">${isAM?'View clients':'View leads'}</button></div></section>`;
 }
 function partnersView(){
   const all = allLeads(), act = activeTeam(), off = team().filter(m=>m.active===false);
@@ -1632,7 +1637,7 @@ function exportSheet(){
     </div>`, 'Download CSV', fd=>{
       const sc = fd.get('scope'); let L = sc==='filtered' ? filteredLeads() : scoped();
       if(sc==='month') L = L.filter(l=>l.month===fd.get('month'));
-      if(sc==='partner') L = allLeads().filter(l=>l.partnerId===fd.get('partner') && (isAdmin()||canEdit(l)));
+      if(sc==='partner') L = allLeads().filter(l=>l.partnerId===fd.get('partner'));
       if(!L.length) return 'No leads match that choice.';
       const name = sc==='month' ? `rps-leads-${fd.get('month')}.csv` : sc==='partner' ? `rps-leads-${pname(fd.get('partner')).toLowerCase().replace(/\W+/g,'-')}.csv` : `rps-leads-${sc}-${today()}.csv`;
       downloadCSV(name, L);
@@ -1861,10 +1866,11 @@ document.addEventListener('click', e=>{
     case 'sheetopen': closeSheet(); go('lead/'+id); break;
     case 'filterpartner': S.ui.pf = id; toast(`Showing ${pname(id)} across the app.`); go('dashboard'); break;
     case 'amleads': S.ui.filters = {am:id}; S.ui.pf='all'; go('leads'); break;
-    case 'partnerleads': S.ui.filters = isAdmin()?{partner:id}:{}; go('leads'); break;
+    case 'partnerleads': S.ui.filters = {partner:id}; go('leads'); break;
     case 'preview': S.ui.preview = id; toast(`Previewing as ${pname(id)}.`); go('dashboard'); break;
     case 'endpreview': S.ui.preview = null; render(); break;
     case 'takeseat': takeSeat(id); break;
+    case 'chase': S.ui.chase = t.dataset.v; render(); break;
     case 'addmember': memberSheet(null); break;
     case 'editmember': memberSheet(id); break;
     case 'deactivate': closeSheet(); deactivateSheet(id); break;
@@ -1886,7 +1892,7 @@ document.addEventListener('click', e=>{
     case 'ai-apply-next': { const d = S.ai[id]?.data; if(!d) return; const x = clone(L); x.next = {type:NEXT_TYPES.includes(d.type)?d.type:'Follow-up', text:d.text, due:addDays(today(),Math.max(0,+d.dueInDays||1)), reminder:'Morning of'}; delete S.ai[id]; saveLead(x, `Follow-up scheduled for ${fmtLong(x.next.due)}.`); break; }
     case 'ai-apply-score': { const d = S.ai[id]?.data; if(!d) return; const x = clone(L); x.score = Math.max(0,Math.min(100,+d.score||0)); if(['hot','warm','cold'].includes(d.priority)) x.priority = d.priority; delete S.ai[id]; saveLead(x, `Lead score set to ${x.score}.`); break; }
     case 'ai-copy': { const txt = S.ai[id]?.text||''; (navigator.clipboard?.writeText(txt)||Promise.reject()).then(()=>toast('Copied.')).catch(()=>{ const el = $('#ai-text-'+id); if(el){ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Text selected. Copy it with your keyboard or long-press.'); } }); break; }
-    case 'moremenu': openSheet(`<h2>More</h2><div class="stack mt12" style="gap:8px">${[['calendar','Calendar','cal'],['reports','Reports','reports'],['partners','Team','partners'],['settings','Settings','settings']].map(([k,l,i])=>`<button type="button" class="btn" style="justify-content:flex-start;min-height:46px" data-a="sheetgo" data-h="${k}">${ic(i)} ${l}</button>`).join('')}${isAdmin()?`<label class="f mt8">Show leads for<select class="input" data-c="pf">${opts([['all','Everyone'],...teamOpts(),['none','Unassigned']], S.ui.pf)}</select></label>`:''}</div>`, '', ()=>{}); break;
+    case 'moremenu': openSheet(`<h2>More</h2><div class="stack mt12" style="gap:8px">${[['calendar','Calendar','cal'],['reports','Reports','reports'],['partners','Team','partners'],['settings','Settings','settings']].map(([k,l,i])=>`<button type="button" class="btn" style="justify-content:flex-start;min-height:46px" data-a="sheetgo" data-h="${k}">${ic(i)} ${l}</button>`).join('')}${true?`<label class="f mt8">Show leads for<select class="input" data-c="pf">${opts([['all','Everyone'],...(myPid()?[['mine','My leads']]:[]),...teamOpts(),['none','Unassigned']], S.ui.pf)}</select></label>`:''}</div>`, '', ()=>{}); break;
     case 'sheetgo': closeSheet(); go(t.dataset.h); break;
     case 'navtoggle': S.ui.navOpen = !S.ui.navOpen; render(); break;
     case 'sresgo': case 'sresall': { const b = $('#sres'); if(b) b.innerHTML=''; if(a==='sresall') { S.ui.filters={}; } break; }
