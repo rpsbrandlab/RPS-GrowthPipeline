@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RPS Growth Pipeline</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%E2%9C%82%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F3F6; --surface:#FFFFFF; --surface-2:#F7F8FA; --line:#E2E4EA; --line-2:#D3D6DF;
+  --ink:#1A1D26; --ink-2:#3B4050; --muted:#666C7C;
+  --accent:#2F43E8; --accent-ink:#FFFFFF; --accent-soft:#E9EBFD;
+  --red:#C2321F; --red-soft:#FCECE9; --amber:#9A5B00; --amber-soft:#FFF2DA;
+  --green:#0F7A57; --green-soft:#E2F4EC; --violet:#6B38C7; --violet-soft:#F0E9FB;
+  --p1:#2F43E8; --p2:#0B8577; --p3:#B0277A;
+  --c0:#2F43E8; --c1:#0B8577; --c2:#B0277A; --c3:#B45309; --c4:#6B38C7; --c5:#0369A1; --c6:#4D7C0F; --c7:#BE123C;
+  --r-lg:16px; --r:11px; --r-sm:8px;
+  --shadow:0 1px 0 rgba(20,24,40,.04), 0 6px 20px -12px rgba(20,24,40,.18);
+  --font:"Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --display:"Bricolage Grotesque", "Geist", ui-sans-serif, system-ui, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1117; --surface:#161A22; --surface-2:#1B2029; --line:#272D39; --line-2:#343B49;
+    --ink:#E9EBF1; --ink-2:#C5C9D4; --muted:#9298A7;
+    --accent:#7F8CFF; --accent-ink:#0E1117; --accent-soft:#1F2550;
+    --red:#FF8A75; --red-soft:#3A1D19; --amber:#F3B656; --amber-soft:#35290F;
+    --green:#5AD3A5; --green-soft:#11302A; --violet:#B99BFF; --violet-soft:#2A2145;
+    --p1:#7F8CFF; --p2:#3CC7B5; --p3:#F07CC3;
+    --c0:#7F8CFF; --c1:#3CC7B5; --c2:#F07CC3; --c3:#F3B656; --c4:#B99BFF; --c5:#5BB8F0; --c6:#9BD45A; --c7:#FF7A93;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1117; --surface:#161A22; --surface-2:#1B2029; --line:#272D39; --line-2:#343B49;
+  --ink:#E9EBF1; --ink-2:#C5C9D4; --muted:#9298A7;
+  --accent:#7F8CFF; --accent-ink:#0E1117; --accent-soft:#1F2550;
+  --red:#FF8A75; --red-soft:#3A1D19; --amber:#F3B656; --amber-soft:#35290F;
+  --green:#5AD3A5; --green-soft:#11302A; --violet:#B99BFF; --violet-soft:#2A2145;
+  --p1:#7F8CFF; --p2:#3CC7B5; --p3:#F07CC3;
+  --c0:#7F8CFF; --c1:#3CC7B5; --c2:#F07CC3; --c3:#F3B656; --c4:#B99BFF; --c5:#5BB8F0; --c6:#9BD45A; --c7:#FF7A93;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);-webkit-font-smoothing:antialiased;}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(28px,4vw,40px);font-weight:800;line-height:1.05}
+h2{font-size:19px;font-weight:700}
+h3{font-size:15px;font-weight:700}
+p{margin:0}
+.ic{flex:none;display:block}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* Layout */
+.app{display:flex;min-height:100vh}
+.side{width:236px;flex:none;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;display:flex;flex-direction:column;border-right:1px solid var(--line);background:var(--surface);padding:18px 12px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;text-decoration:none}
+.brand b{font-family:var(--display);font-weight:800;font-size:16px;line-height:1.1}
+.brand small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:9px;text-decoration:none;color:var(--ink-2);font-weight:500}
+.nav a:hover{background:var(--surface-2)}
+.nav a.on{background:var(--accent-soft);color:var(--accent)}
+.nav .count{margin-left:auto;font-size:12px;font-weight:600;background:var(--red);color:#fff;border-radius:99px;padding:0 7px;line-height:19px}
+.side-foot{margin-top:auto;border-top:1px solid var(--line);padding:12px 8px 0}
+.me{display:flex;align-items:center;gap:10px;font-size:13px}
+.me small{display:block;color:var(--muted)}
+.maincol{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:10px 24px}
+.top .searchwrap{position:relative;flex:1;max-width:460px}
+.top .mobile-brand{display:none}
+main{padding:24px;max-width:1360px;width:100%;margin:0 auto}
+.bottom{display:none}
+
+/* Controls */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:8px 13px;font-weight:500;font-size:14px;cursor:pointer;white-space:nowrap;text-decoration:none;line-height:1.2;min-height:38px}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{filter:brightness(1.07)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.danger{color:var(--red);border-color:color-mix(in srgb,var(--red) 40%,var(--line))}
+.btn.sm{padding:5px 9px;font-size:13px;min-height:32px;border-radius:8px}
+.btn.icon{padding:0;width:38px}
+.btn.sm.icon{width:32px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.input,select.input,textarea.input{width:100%;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:8px 11px;min-height:38px;outline:none}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea.input{min-height:84px;resize:vertical;line-height:1.45}
+.search{padding-left:36px}
+.searchwrap .ic{position:absolute;left:11px;top:10px;color:var(--muted)}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:500;color:var(--ink-2)}
+label.f .hint{font-weight:400;color:var(--muted);font-size:12px}
+label.f{position:relative}
+.req::after{content:"Required";color:var(--muted);font-size:11.5px;font-weight:400;position:absolute;top:1px;right:0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.row{display:flex;align-items:center;gap:10px}
+.wrap{flex-wrap:wrap}
+.between{justify-content:space-between}
+.grow{flex:1;min-width:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.tiny{font-size:12px}
+.strong{font-weight:600}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow)}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.page-h p{color:var(--muted);margin-top:6px}
+
+/* Chips & badges */
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;border-radius:99px;padding:2px 9px;line-height:18px;white-space:nowrap;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.chip.blue{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.chip.violet{background:var(--violet-soft);color:var(--violet);border-color:transparent}
+.chip.amber{background:var(--amber-soft);color:var(--amber);border-color:transparent}
+.chip.green{background:var(--green-soft);color:var(--green);border-color:transparent}
+.chip.red{background:var(--red-soft);color:var(--red);border-color:transparent}
+.chip.dashed{border-style:dashed;background:transparent}
+.chip.hot{background:var(--red);color:#fff;border-color:transparent}
+.chip.warm{background:var(--amber-soft);color:var(--amber);border-color:transparent}
+.chip.cold{background:var(--surface-2);color:var(--muted)}
+.toggle-chip{cursor:pointer;user-select:none}
+.toggle-chip input{position:absolute;opacity:0;pointer-events:none}
+.toggle-chip:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.toggle-chip:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.due{font-weight:600;font-size:13px;white-space:nowrap}
+.due.over{color:var(--red)}
+.due.today{color:var(--amber)}
+.pglyph{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pglyph svg{flex:none}
+.score{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums;font-weight:600;font-size:13px}
+.score i{display:block;width:34px;height:5px;border-radius:9px;background:var(--line);overflow:hidden}
+.score i b{display:block;height:100%;background:var(--accent);border-radius:9px}
+
+/* Dashboard */
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.hero .hello{color:var(--muted);font-weight:500;margin-bottom:6px}
+.hero h1{font-size:clamp(34px,5.4vw,58px);letter-spacing:-.025em}
+.chase-sum{margin-top:10px;font-size:17px;color:var(--ink-2)}
+.chase-sum b.r{color:var(--red)} .chase-sum b.a{color:var(--amber)}
+.dash{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi:hover{border-color:var(--line-2)}
+.kpi .v{font-family:var(--display);font-size:26px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12.5px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.red .v{color:var(--red)} .kpi.amber .v{color:var(--amber)} .kpi.green .v{color:var(--green)}
+.agroup + .agroup{margin-top:16px}
+.agroup h3{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--muted)}
+.agroup h3 .n{color:var(--ink)}
+.aitem{display:grid;grid-template-columns:4px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px 10px 0;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);text-decoration:none;margin-bottom:6px;cursor:pointer}
+.aitem:hover{border-color:var(--line-2)}
+.aitem .bar{align-self:stretch;border-radius:0 4px 4px 0;background:var(--line-2)}
+.aitem.over{background:var(--red-soft);border-color:color-mix(in srgb,var(--red) 30%,transparent)}
+.aitem.over .bar{background:var(--red)}
+.aitem.today .bar{background:var(--amber)}
+.aitem .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aitem .s{font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.warnbar{display:flex;align-items:center;gap:12px;border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);background:var(--amber-soft);color:var(--amber);border-radius:var(--r);padding:11px 14px;margin-bottom:16px;font-weight:500;flex-wrap:wrap}
+.warnbar .btn{margin-left:auto}
+.funnel{display:flex;flex-direction:column;gap:6px}
+.fstep{display:grid;grid-template-columns:110px minmax(0,1fr) 72px;gap:10px;align-items:center;font-size:13.5px}
+.fstep .track{height:26px;background:var(--surface-2);border-radius:7px;overflow:hidden}
+.fstep .fill{height:100%;background:var(--accent);border-radius:7px;min-width:3px;opacity:.9}
+.fstep:last-child .fill{background:var(--green)}
+.fstep .num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.fstep .num small{color:var(--muted);font-weight:500;margin-left:4px}
+.mstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mstat{padding:10px 12px;border-radius:10px;background:var(--surface-2)}
+.mstat b{font-family:var(--display);font-size:22px;display:block;line-height:1.1}
+.mstat span{font-size:12.5px;color:var(--muted)}
+.bars{display:flex;align-items:flex-end;gap:10px;height:120px;padding-top:6px}
+.bars .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end;min-width:0}
+.bars .pair{display:flex;align-items:flex-end;gap:3px;height:100%;width:100%;justify-content:center}
+.bars .b1{width:42%;max-width:18px;background:var(--line-2);border-radius:4px 4px 0 0}
+.bars .b2{width:42%;max-width:18px;background:var(--green);border-radius:4px 4px 0 0}
+.bars .col.on .b1{background:var(--accent)}
+.bars small{font-size:11.5px;color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.prow{display:grid;grid-template-columns:minmax(120px,1.2fr) repeat(5,minmax(0,1fr));gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.prow.h{border-top:0;font-size:12.5px;color:var(--muted);font-weight:500;padding-top:0}
+.prow .w{height:6px;border-radius:9px;background:var(--surface-2);margin-top:6px;overflow:hidden}
+.prow .w b{display:block;height:100%;border-radius:9px}
+
+/* Tables & lists */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface)}
+table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:1080px}
+.tbl th{text-align:left;font-weight:500;color:var(--muted);font-size:12.5px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--surface-2);white-space:nowrap;position:sticky;top:0}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr{cursor:pointer}
+.tbl tbody tr:hover td{background:var(--surface-2)}
+.tbl .co{font-weight:600}
+.tbl .sub{color:var(--muted);font-size:12.5px}
+.tbl .nx{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbl.compact{min-width:640px}
+.tbl.compact td,.tbl.compact th{padding:9px 12px}
+.tbl.compact tbody tr{cursor:default}
+.tbl td.num,.tbl th.num{text-align:right;font-variant-numeric:tabular-nums}
+.lcards{display:none;flex-direction:column;gap:8px}
+.lcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;cursor:pointer}
+.lcard.over{border-left:4px solid var(--red)}
+.lcard.today{border-left:4px solid var(--amber)}
+.filters{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);margin-bottom:12px}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.activechips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.activechips .chip{cursor:pointer}
+.empty{text-align:center;padding:38px 18px;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-family:var(--display);font-size:18px;margin-bottom:4px}
+.empty .btn{margin-top:14px}
+
+/* Lead detail */
+.lead-h{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.lead-h h1{font-size:clamp(26px,3.6vw,38px)}
+.lead-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.lead-meta select{min-height:32px;padding:4px 8px;font-size:13px;border-radius:8px;width:auto}
+.qa{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.qa .btn{min-height:36px}
+.ldgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+.next{border:2px solid var(--accent);background:linear-gradient(0deg,var(--surface),var(--surface)) padding-box;position:relative}
+.next.over{border-color:var(--red)}
+.next.today{border-color:var(--amber)}
+.next .what{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.2;margin:4px 0 6px}
+.next .lbl{font-size:13px;font-weight:600;color:var(--accent)}
+.next.over .lbl{color:var(--red)}.next.today .lbl{color:var(--amber)}
+.alertbox{border:1px dashed var(--amber);background:var(--amber-soft);color:var(--amber);border-radius:var(--r-lg);padding:16px}
+.alertbox b{display:flex;gap:8px;align-items:center;font-family:var(--display);font-size:17px}
+.alertbox p{color:var(--ink-2);margin:6px 0 12px}
+.timeline{position:relative;margin-top:6px}
+.tl{display:grid;grid-template-columns:62px 18px minmax(0,1fr);gap:8px;padding:8px 0}
+.tl .d{font-size:12.5px;color:var(--muted);text-align:right;line-height:1.3;padding-top:1px}
+.tl .d b{display:block;color:var(--ink);font-weight:600;font-size:13px}
+.tl .dot{position:relative}
+.tl .dot::before{content:"";position:absolute;left:8px;top:16px;bottom:-14px;width:1px;background:var(--line-2)}
+.tl:last-child .dot::before{display:none}
+.tl .dot i{display:block;width:12px;height:12px;border-radius:50%;margin:4px 0 0 2px;background:var(--surface);border:3px solid var(--accent)}
+.tl .body .h{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.tl .body p{margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere}
+.composer{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px;padding:12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.composer textarea{grid-column:1/-1;min-height:64px}
+.composer .row{grid-column:1/-1;justify-content:flex-end}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;text-align:right;overflow-wrap:anywhere}
+.contact-name{font-family:var(--display);font-size:19px;font-weight:700}
+.tabs{display:flex;gap:4px;background:var(--surface-2);padding:3px;border-radius:10px;border:1px solid var(--line)}
+.tabs button{border:0;background:transparent;padding:5px 11px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)}
+.tabs button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.note{padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2)}
+.note p{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:4px}
+.ai-out{white-space:pre-wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:14px;margin-top:10px;overflow-wrap:anywhere}
+.banner{border-radius:var(--r);padding:12px 14px;margin-bottom:14px;font-size:14px}
+.banner.green{background:var(--green-soft);color:var(--green)}
+.banner.red{background:var(--red-soft);color:var(--red)}
+.banner.grey{background:var(--surface-2);border:1px dashed var(--line-2);color:var(--ink-2)}
+.preview-banner{background:var(--violet-soft);color:var(--violet);padding:8px 24px;font-size:13.5px;display:flex;gap:10px;align-items:center}
+
+/* Pipeline */
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:14px;align-items:flex-start;scroll-snap-type:x proximity}
+.colm{flex:0 0 272px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-lg);display:flex;flex-direction:column;max-height:calc(100vh - 210px);scroll-snap-align:start}
+.colm.drop{border-color:var(--accent);background:var(--accent-soft)}
+.colm-h{padding:12px 13px 8px;display:flex;align-items:center;gap:8px}
+.colm-h h3{font-size:14px}
+.colm-h .n{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
+.colm-v{padding:0 13px 8px;font-size:12px;color:var(--muted)}
+.colm-b{padding:0 8px 10px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;min-height:60px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 11px;cursor:grab;font-size:13px}
+.pcard:hover{border-color:var(--line-2)}
+.pcard.dragging{opacity:.4}
+.pcard .co{font-weight:600;font-size:14px}
+.pcard .nx{color:var(--ink-2);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .mv{display:none;margin-top:8px}
+.sdot{width:9px;height:9px;border-radius:50%;flex:none}
+
+/* Follow-ups */
+.fsec{margin-bottom:22px}
+.fsec-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fsec-h .n{font-weight:600;color:var(--muted)}
+.fitem{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:6px}
+.fitem.over{border-left:4px solid var(--red);background:color-mix(in srgb,var(--red-soft) 55%,var(--surface))}
+.fitem.today{border-left:4px solid var(--amber)}
+.fitem.none{border-left:4px dashed var(--amber)}
+.fitem .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.fitem .open{cursor:pointer;min-width:0}
+
+/* Calendar */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--line);gap:1px}
+.cal .dow{background:var(--surface-2);padding:8px;font-size:12px;font-weight:600;color:var(--muted)}
+.cal .day{background:var(--surface);min-height:112px;padding:6px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.cal .day.out{background:var(--surface-2)}
+.cal .day.out .dn{opacity:.45}
+.cal .day .dn{font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:2px}
+.cal .day.td .dn{color:var(--accent-ink);background:var(--accent);border-radius:99px;width:24px;height:24px;display:grid;place-items:center}
+.ev{font-size:11.5px;line-height:1.3;padding:3px 6px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:0;text-align:left;width:100%}
+.ev.meeting{background:var(--violet-soft);color:var(--violet)}
+.ev.call,.ev.followup{background:var(--accent-soft);color:var(--accent)}
+.ev.proposal{background:var(--amber-soft);color:var(--amber)}
+.ev.recontact{background:var(--surface-2);color:var(--ink-2);border:1px dashed var(--line-2)}
+.ev.over{background:var(--red-soft);color:var(--red)}
+.ev.more{background:transparent;color:var(--muted)}
+.agenda{display:none}
+.agenda .aday{margin-bottom:14px}
+.agenda .aday h3{font-family:var(--font);font-size:13px;color:var(--muted);margin-bottom:6px}
+.agenda .ev{font-size:14px;padding:9px 11px;white-space:normal;margin-bottom:5px}
+
+/* Reports */
+.rgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.progress{height:10px;border-radius:9px;background:var(--surface-2);overflow:hidden}
+.progress b{display:block;height:100%;background:var(--accent);border-radius:9px}
+.hbar{display:grid;grid-template-columns:minmax(110px,170px) minmax(0,1fr) 34px;gap:10px;align-items:center;font-size:13.5px;margin-bottom:7px}
+.hbar .t{height:14px;background:var(--surface-2);border-radius:5px;overflow:hidden}
+.hbar .t b{display:block;height:100%;background:var(--red);opacity:.75;border-radius:5px}
+.hbar .num{text-align:right;font-weight:600}
+.target{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:14px}
+.target div{background:var(--surface-2);border-radius:10px;padding:10px}
+.target b{font-family:var(--display);font-size:22px;display:block}
+.target span{font-size:12px;color:var(--muted)}
+
+/* Partners */
+.pcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}
+.pstats div{background:var(--surface-2);border-radius:10px;padding:9px 11px}
+.pstats b{font-family:var(--display);font-size:20px;display:block}
+.pstats span{font-size:12px;color:var(--muted)}
+
+/* Form */
+.fsect{margin-bottom:16px}
+.fsect h2{margin-bottom:14px}
+.svc{display:flex;flex-wrap:wrap;gap:6px}
+.svc .chip{padding:5px 11px;font-size:13px;position:relative}
+.dup{border:1px solid var(--amber);background:var(--amber-soft);border-radius:var(--r-lg);padding:16px;margin-bottom:16px}
+.dup b.t{font-family:var(--display);font-size:18px;color:var(--amber);display:block}
+.dupitem{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--surface);border-radius:10px;padding:10px 12px;margin-top:10px;flex-wrap:wrap}
+.contact-block{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;background:var(--surface-2)}
+.formbar{position:sticky;bottom:0;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--line)}
+
+/* Sheet & toasts */
+.scrim{position:fixed;inset:0;background:rgba(10,12,20,.42);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+.sheet{background:var(--surface);border-radius:18px;width:min(520px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+.sheet h2{margin-bottom:4px}
+.sheet .sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+.sheet .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.quickdates{display:flex;gap:6px;flex-wrap:wrap}
+.toasts{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:80;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.toast{background:var(--ink);color:var(--bg);padding:11px 15px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:0 12px 30px -10px rgba(0,0,0,.35);display:flex;gap:12px;align-items:center;animation:tin .18s ease-out}
+.toast.err{background:var(--red);color:#fff}
+@keyframes tin{from{transform:translateY(8px);opacity:0}}
+.sres{position:absolute;left:0;right:0;top:44px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.3);overflow:hidden;z-index:30}
+.sres a{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;text-decoration:none;border-bottom:1px solid var(--line);font-size:14px}
+.sres a:last-child{border-bottom:0}
+.sres a:hover,.sres a.hl{background:var(--surface-2)}
+.loading{display:grid;place-items:center;min-height:60vh;color:var(--muted)}
+.authwrap{min-height:100vh;display:grid;place-items:center;padding:20px}
+.authcard{width:min(420px,100%)}
+.authcard h1{font-size:30px;margin:18px 0 6px}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-size:14px;text-decoration:underline}
+.seat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.seat button{padding:18px;border:1px solid var(--line-2);border-radius:14px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;font-weight:600}
+.seat button:hover{border-color:var(--accent)}
+.seat button small{font-weight:400}
+.tm{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.tm:first-child{border-top:0}
+.tm.off{opacity:.55}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches label{cursor:pointer;display:grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--line-2);position:relative}
+.swatches input{position:absolute;opacity:0;pointer-events:none}
+.swatches label:has(input:checked){border:2px solid var(--ink)}
+.swatches label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.rolegroup + .rolegroup{margin-top:26px}
+.rolegroup > h2{margin-bottom:12px}
+
+/* Responsive */
+@media (max-width:1180px){
+  .kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .dash{grid-template-columns:minmax(0,1fr)}
+  .ldgrid{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:1023px){
+  .side{width:68px;padding:16px 10px}
+  .side .brand>div,.nav a span,.nav .count,.side-foot .me>div{display:none}
+  .nav a{justify-content:center;padding:10px}
+  .side.open{width:236px;position:fixed;z-index:50;box-shadow:0 0 40px rgba(0,0,0,.25)}
+  .side.open .brand>div,.side.open .nav a span,.side.open .nav .count,.side.open .side-foot .me>div{display:block}
+  .side.open .nav a{justify-content:flex-start}
+  .pcards{grid-template-columns:minmax(0,1fr)}
+  .rgrid{grid-template-columns:minmax(0,1fr)}
+  .kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:719px){
+  .side{display:none}
+  .top{padding:8px 12px;gap:8px}
+  .top .mobile-brand{display:flex}
+  .top .pf,.top .addlead span{display:none}
+  main{padding:16px 14px 96px}
+  .bottom{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px env(safe-area-inset-bottom,0px)}
+  .bottom a,.bottom button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;padding:6px 0;text-decoration:none;color:var(--muted);background:none;border:0;position:relative;cursor:pointer}
+  .bottom .on{color:var(--accent)}
+  .bottom .count{position:absolute;top:2px;left:calc(50% + 6px);background:var(--red);color:#fff;font-size:10px;border-radius:99px;padding:0 5px;line-height:16px}
+  .kpis{display:flex;overflow-x:auto;gap:8px;margin:0 -14px 16px;padding:0 14px 4px;scroll-snap-type:x proximity}
+  .kpi{flex:0 0 128px;scroll-snap-align:start;padding:10px 11px}
+  .kpi .v{font-size:22px}
+  .kpi .l{white-space:normal;line-height:1.25}
+  .hero{margin-bottom:14px}
+  .hero > .row{display:none}
+  .lead-h{flex-direction:column}
+  .lead-h > .row{order:-1;justify-content:flex-end;margin-bottom:-6px}
+  .qa{flex-wrap:nowrap;overflow-x:auto;margin:0 -14px 16px;padding:0 14px 4px}
+  .toolbar .searchwrap{flex:1 1 100%;max-width:none!important}
+  .page-h > .row .btn{flex:1}
+  .grid2,.grid3{grid-template-columns:minmax(0,1fr)}
+  .tbl-wrap.leads-tbl{display:none}
+  .lcards{display:flex}
+  .fitem{grid-template-columns:minmax(0,1fr)}
+  .fitem .acts{justify-content:flex-start}
+  .cal{display:none}
+  .agenda{display:block}
+  .pcard .mv{display:block}
+  .colm{flex-basis:84vw;max-height:none}
+  .prow{grid-template-columns:minmax(90px,1fr) repeat(5,minmax(0,1fr));font-size:13px;gap:6px}
+  .target{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .seat{grid-template-columns:minmax(0,1fr)}
+  .mstats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fstep{grid-template-columns:86px minmax(0,1fr) 64px}
+  .scrim{align-items:flex-end;padding:0}
+  .sheet{border-radius:18px 18px 0 0;max-height:88vh;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+  .toasts{left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));align-items:stretch}
+  .composer{grid-template-columns:minmax(0,1fr)}
+  .formbar{bottom:calc(58px + env(safe-area-inset-bottom,0px))}
+  .preview-banner{padding:8px 14px}
+}
+</style>
+</head>
+<body>
+<div id="root"><div class="loading">Loading the pipeline…</div></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+<div id="sheet"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script>
+"use strict";
+/* ============================================================
+   RPS Growth Pipeline — internal lead-conversion CRM
+   Structure: constants → utils → state → demo data → data layer →
+   derived metrics → UI atoms → views → sheets → AI → events → init
+   ============================================================ */
+
+/* ---------- Constants ---------- */
+const STAGES = [
+  {k:'new',l:'New',r:1,tone:''},
+  {k:'researching',l:'Researching',r:1,tone:''},
+  {k:'no_contact',l:'Contact not made',r:1,tone:''},
+  {k:'initial',l:'Initial contact',r:2,tone:'blue'},
+  {k:'followup',l:'Follow-up',r:2,tone:'blue'},
+  {k:'meeting',l:'Meeting booked',r:3,tone:'violet'},
+  {k:'qualified',l:'Qualified',r:4,tone:'violet'},
+  {k:'proposal',l:'Proposal',r:5,tone:'amber'},
+  {k:'negotiation',l:'Negotiation',r:6,tone:'amber'},
+  {k:'converted',l:'Converted',r:7,tone:'green'},
+  {k:'rejected',l:'Rejected',r:0,tone:'red'},
+  {k:'notnow',l:'Not now',r:0,tone:'dashed'},
+  {k:'unresponsive',l:'Unresponsive',r:0,tone:''},
+];
+const ST = Object.fromEntries(STAGES.map(s=>[s.k,s]));
+const CLOSED = ['converted','rejected','unresponsive'];          // no next action required
+const FUNNEL = [['Prospects',0],['Contacted',2],['Meetings',3],['Qualified',4],['Proposals',5],['Negotiation',6],['Converted',7]];
+const INDUSTRIES = ['Restaurants','Hospitality','Financial Services','Professional Services','E-commerce','Retail','Technology','Healthcare','Real Estate','Startups','Other'];
+const DEFAULT_SOURCES = ['LinkedIn','Instagram','Facebook','Google','Website research','Referral','Existing network','Partner referral','Event','Cold outreach','Other'];
+const SERVICES = ['Social Media Management','Social Media Strategy','Content Production','Paid Social','Website','Brand Identity','AI Software','AI Automation','AI Agents','Chatbots','Document Processing','CRM / Integrations','AI Consulting','Other'];
+const ACT_TYPES = ['Call','Email','WhatsApp','Meeting','LinkedIn','Proposal','Note','Status Change','Other'];
+const NEXT_TYPES = ['Call','Email','WhatsApp','Meeting','LinkedIn','Proposal','Follow-up','Research','Re-contact','Other'];
+const CONTACT_TYPES = ['Call','Email','WhatsApp','Meeting','LinkedIn','Proposal'];
+const REJECT_REASONS = ['Too expensive','Not interested','No budget','Wrong timing','Already has agency','Already has internal team','No decision maker','No response','Not a good fit','Competitor chosen','Service not required','Other'];
+const SIZES = ['1–10','11–50','51–200','201–500','500+'];
+const REMINDERS = ['None','Morning of','1 hour before','1 day before'];
+const PRIORITIES = [['hot','Hot'],['warm','Warm'],['cold','Cold']];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DEFAULT_SETTINGS = {
+  partners:[{id:'p1',name:'Partner 1'},{id:'p2',name:'Partner 2'},{id:'p3',name:'Partner 3'}],
+  sources: DEFAULT_SOURCES.slice(),
+  defaultTarget: 50,
+  targets: {},
+};
+const LS_KEY = 'rps-growth-pipeline-v1';
+const ROLES = [['partner','Partner'],['sales','Sales person'],['account_manager','Account manager'],['other','Other']];
+const roleName = r => (ROLES.find(x=>x[0]===r)||[,'Team member'])[1];
+
+/* ---------- Utils ---------- */
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const pad = n => String(n).padStart(2,'0');
+const isoD = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today = () => isoD(new Date());
+const parseD = s => { const [y,m,d] = String(s).slice(0,10).split('-').map(Number); return new Date(y,(m||1)-1,d||1); };
+const addDays = (s,n) => { const d = parseD(s); d.setDate(d.getDate()+n); return isoD(d); };
+const diffDays = (a,b) => Math.round((parseD(a)-parseD(b))/864e5);
+const monthOf = s => String(s||'').slice(0,7);
+const thisMonth = () => today().slice(0,7);
+const shiftMonth = (m,n) => { const [y,mo] = m.split('-').map(Number); const d = new Date(y,mo-1+n,1); return `${d.getFullYear()}-${pad(d.getMonth()+1)}`; };
+const monthLabel = m => { if(!m) return ''; const [y,mo] = m.split('-').map(Number); return `${MONTHS[mo-1]} ${y}`; };
+const monthShort = m => { const [y,mo] = m.split('-').map(Number); return MONTHS[mo-1].slice(0,3); };
+const fmtD = s => { if(!s) return '—'; const d = parseD(s); return `${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} ${d.getFullYear()}`; };
+const fmtLong = s => { const d = parseD(s); return `${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+const fmtShort = s => { const d = parseD(s); return `${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}`; };
+const fmtTime = iso => { const d = new Date(iso); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const nowLocalInput = () => { const d = new Date(); return `${isoD(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const money = n => (n || n===0) && n!=='' ? '£' + Number(n).toLocaleString('en-GB',{maximumFractionDigits:0}) : '—';
+const pct = (a,b) => b ? Math.round(a/b*100) : 0;
+function relDue(s){
+  if(!s) return 'No date';
+  const d = diffDays(s, today());
+  if(d===0) return 'Today'; if(d===1) return 'Tomorrow'; if(d===-1) return 'Yesterday';
+  if(d<0) return `${-d} days ago`; if(d<7) return `In ${d} days`; return fmtShort(s);
+}
+const dueClass = s => !s ? '' : diffDays(s,today())<0 ? 'over' : diffDays(s,today())===0 ? 'today' : '';
+const normCo = s => String(s||'').toLowerCase().replace(/&/g,' and ').replace(/\b(ltd|limited|llp|plc|inc|co|company|the|group|uk)\b/g,'').replace(/[^a-z0-9]/g,'');
+const normWeb = s => String(s||'').toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'').trim();
+const normPhone = s => { const d = String(s||'').replace(/\D/g,''); return d.length>=9 ? d.slice(-9) : ''; };
+const normMail = s => String(s||'').trim().toLowerCase();
+const waLink = s => { let d = String(s||'').replace(/\D/g,''); if(d.startsWith('0')) d = '44'+d.slice(1); return d ? 'https://wa.me/'+d : ''; };
+const extUrl = s => !s ? '' : /^https?:\/\//i.test(s) ? s : 'https://'+s;
+
+/* ---------- State ---------- */
+const S = {
+  mode:'local',            // 'db' (shared, persistent) or 'local' (this browser only)
+  ready:false,
+  cap:{},                  // resolved capability namespaces
+  uid:null, isOwnerAdmin:false, auth:'unknown', email:'', authMsg:'', setup:null,
+  leads:{}, settings:clone(DEFAULT_SETTINGS), members:{}, membersLoaded:false, leadsLoaded:false,
+  localRole:{role:'admin',partnerId:'p1'},
+  ui:{ pf:'all', search:'', filters:{}, showFilters:false, sort:'due', dashMonth:thisMonth(), repMonth:thisMonth(), calMonth:thisMonth(),
+       noteTab:{}, preview:null, skipSeat:false, navOpen:false },
+  keep:{},                 // composer drafts that survive re-renders
+  form:null,               // lead form draft
+  importState:null,
+  ai:{},                   // per-lead AI output
+  sheet:null, pending:false,
+};
+
+/* ---------- Identity & permissions ---------- */
+function me(){
+  if(S.mode==='local') return S.localRole;
+  const pid = S.members[S.uid]?.partnerId || null;
+  return { role: S.isOwnerAdmin ? 'admin' : 'partner', partnerId: pid };
+}
+function isAdmin(){ return !S.ui.preview && me().role==='admin'; }
+function myPid(){ return S.ui.preview || me().partnerId; }
+function canEdit(l){ if(isAdmin()) return true; const p = myPid(); return !!p && (l.partnerId===p || l.backupPartnerId===p || l.accountManagerId===p); }
+/* Team: stored under settings.partners for backward compatibility. Every member can own leads. */
+function team(){ return (S.settings.partners||[]).map((m,i)=>({role:'partner',title:'',email:'',phone:'',active:true,color:i%8,shape:i%3,...m})); }
+function activeTeam(){ return team().filter(m=>m.active!==false); }
+function teamOpts(){ const order = ROLES.map(r=>r[0]); return activeTeam().sort((a,b)=>order.indexOf(a.role)-order.indexOf(b.role)).map(m=>[m.id, m.name+(m.role!=='partner'?' ('+roleName(m.role)+')':'')]); }
+function partner(id){ return team().find(p=>p.id===id); }
+function mcolor(id){ const m = partner(id); return m ? `var(--c${(+m.color||0)%8})` : 'var(--muted)'; }
+function leadCount(id){ return allLeads().filter(l=>l.partnerId===id||l.backupPartnerId===id||l.accountManagerId===id).length; }
+function pname(id){ return id ? (partner(id)?.name || 'Unknown') : 'Unassigned'; }
+function byLabel(by){ return by==='admin' ? 'Admin' : by==='import' ? 'CSV import' : pname(by); }
+function actor(){ return myPid() || 'admin'; }
+
+/* ---------- Demo data ---------- */
+function mulberry(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function buildDemo(){
+  const R = mulberry(20261004), pick = a => a[Math.floor(R()*a.length)], rint = (a,b) => a+Math.floor(R()*(b-a+1));
+  const T = today(), M0 = thisMonth(), daysIn = parseD(T).getDate();
+  const CO = [
+    ['Ember & Oak Kitchen','Restaurants','Croydon'],['Harbour Lane Bistro','Restaurants','Brighton'],['Saffron Street Grill','Restaurants','Birmingham'],
+    ['Copper Pot Dining Co','Restaurants','Manchester'],['Nori Bowl Bar','Restaurants','London'],['Wildfire Pizza Co','Restaurants','Leeds'],
+    ['Kestrel House Hotel','Hospitality','Bath'],['Marlowe Rooms','Hospitality','Canterbury'],['Brightwater Spa & Stay','Hospitality','Bournemouth'],
+    ['Ashgrove Wealth Partners','Financial Services','Sheffield'],['Northgate Mortgage Hub','Financial Services','Croydon'],['Clearpath Accountants','Professional Services','Reading'],
+    ['Halden & Price Solicitors','Professional Services','Guildford'],['Fenwick Recruitment Group','Professional Services','London'],['Loom & Thread Studio','E-commerce','Bristol'],
+    ['Peak Form Supplements','E-commerce','Nottingham'],['Little Acorn Toys','E-commerce','Norwich'],['Velvet Pantry','E-commerce','London'],
+    ['Greystone Home Interiors','Retail','Sutton'],['Kitebox Bikes','Retail','Cambridge'],['Mercer Street Opticians','Retail','Croydon'],
+    ['Brickline Software','Technology','London'],['Datafold Analytics','Technology','Manchester'],['Orbitask','Technology','Edinburgh'],
+    ['Willow Dental Care','Healthcare','Croydon'],['Riverside Physio Clinic','Healthcare','Kingston'],['Bloom Aesthetics Clinic','Healthcare','Epsom'],
+    ['Calder Keys Estates','Real Estate','Bromley'],['Southfield Lettings','Real Estate','Croydon'],['Parkview Developments','Real Estate','Watford'],
+    ['Sprout Meal Kits','Startups','London'],['Fieldnote Coffee Roasters','Startups','Brighton'],['Tandem Fitness App','Startups','London'],
+    ['Glowroot Skincare','Startups','Manchester'],['Crumb & Co Bakery','Restaurants','Croydon'],['Seaglass Boutique Hotel','Hospitality','Whitstable'],
+    ['Ledgerline Bookkeeping','Financial Services','Croydon'],['Hartwell Architects','Professional Services','Oxford'],['Urban Roots Garden Centre','Retail','Purley'],
+    ['Pulse Gym Collective','Healthcare','Croydon'],['Mintleaf Vegan Deli','Restaurants','London'],['Coastline Insurance Brokers','Financial Services','Hove'],
+  ];
+  const FN = ['Amelia','Oliver','Priya','James','Sophie','Daniel','Hannah','Marcus','Leah','Tom','Aisha','Ben','Chloe','Ravi','Grace','Liam','Zara','Ethan','Maya','Sam','Nadia','Owen','Isla','Kofi','Freya'];
+  const LN = ['Hartley','Okafor','Bennett','Shah','Collins','Reid','Patel','Doyle','Mensah','Fraser','Lowe','Ahmed','Carter','Nwosu','Whitfield','Kaur','Holmes','Barker','Quinn','Ellis'];
+  const TITLES = ['Owner','Founder','Marketing Director','Managing Director','Head of Marketing','Operations Manager','General Manager','Co-founder','Practice Manager','Brand Manager'];
+  const plans = [
+    ...['new','new','new','researching','researching','no_contact','no_contact','initial','initial','initial','followup','followup','meeting','qualified'].map(s=>[0,s]),
+    ...['followup','followup','meeting','meeting','qualified','qualified','proposal','proposal','proposal','negotiation','converted','converted','rejected','notnow'].map(s=>[1,s]),
+    ...['proposal','negotiation','converted','converted','converted','converted','rejected','rejected','rejected','notnow','notnow','unresponsive','unresponsive','followup'].map(s=>[2,s]),
+  ];
+  const dueCycle = [-3,0,1,-1,2,0,4,-2,6,0,3,9,-5,1,12,0,5,-4,2,8,1,0,14,3];
+  const svcByInd = {
+    Restaurants:['Social Media Management','Content Production','Paid Social'], Hospitality:['Social Media Management','Website','Chatbots'],
+    'Financial Services':['Social Media Strategy','CRM / Integrations','AI Automation'], 'Professional Services':['Social Media Strategy','AI Automation','Document Processing'],
+    'E-commerce':['Paid Social','Content Production','AI Agents'], Retail:['Social Media Management','Paid Social','Website'],
+    Technology:['Brand Identity','Content Production','AI Consulting'], Healthcare:['Social Media Management','Chatbots','Website'],
+    'Real Estate':['Content Production','CRM / Integrations','Chatbots'], Startups:['Brand Identity','Social Media Strategy','AI Software'],
+  };
+  const flows = {
+    1:[['Note','Researched online presence. Posting is irregular and engagement low.']],
+    2:[['Call','Initial contact made. Interested, but needs to discuss internally.'],['Email','Sent intro email with two relevant case studies.']],
+    3:[['WhatsApp','Quick follow-up on WhatsApp. Agreed to a discovery call.'],['Meeting','Discovery meeting booked.']],
+    4:[['Meeting','Discovery meeting completed. Clear budget and decision maker identified.']],
+    5:[['Proposal','Proposal sent covering retainer and setup.']],
+    6:[['Call','Discussed pricing. Asked for a phased start.']],
+    7:[['Email','Signed agreement received. Onboarding to start next month.']],
+  };
+  const sources = DEFAULT_SOURCES.slice(0,10);
+  const unassignedIdx = new Set([1,5]), missingNextIdx = new Set([8,15]);
+  const leads = {}; let dc = 0, nn = 0;
+  plans.forEach(([mo,status],i)=>{
+    const [company,industry,location] = CO[i];
+    const first = FN[i%FN.length], last = LN[(i*7)%LN.length];
+    const dom = company.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'')+'.co.uk';
+    const added = mo===0 ? addDays(T,-rint(0,Math.max(0,daysIn-1))) : `${shiftMonth(M0,-mo)}-${pad(rint(2,26))}`;
+    const pid = unassignedIdx.has(i) ? null : ['p1','p2','p3'][i%3];
+    const backup = pid ? ['p1','p2','p3'][(i+1)%3] : null;
+    const rank = ST[status].r || (status==='rejected' ? rint(2,5) : status==='notnow' ? rint(2,4) : 2);
+    const base = Math.min(95, 38 + rank*7 + rint(0,18));
+    const score = status==='rejected' ? rint(30,55) : base;
+    const svc = (svcByInd[industry]||['Social Media Management']).slice(0, rint(1,3));
+    const value = [900,1200,1500,1800,2200,2500,3000,3800,4500][rint(0,8)];
+    const id = 'L'+(1000+i);
+    const span = Math.max(1, diffDays(T, added));
+    const acts = []; const hist = [{s:'new',at:added+'T09:00'}];
+    let step = 0;
+    const stamp = () => { step++; const d = addDays(added, Math.min(span, Math.round(span*step/(rank+2)))); return `${d}T${pad(9+rint(0,8))}:${pad(rint(0,5)*10)}`; };
+    for(let r=1;r<=rank;r++) (flows[r]||[]).forEach(([t,x])=>acts.push({id:uid('a'),at:stamp(),by:pid||'admin',type:t,text:x}));
+    if(rank>=2) hist.push({s:'initial',at:acts.find(a=>a.type==='Call')?.at||added});
+    STAGES.filter(s=>s.r>=3 && s.r<=rank).forEach(s=>hist.push({s:s.k,at:stamp()}));
+    const L = {
+      id, company, website:'www.'+dom, industry, location, size:pick(SIZES),
+      socials:{linkedin:'linkedin.com/company/'+dom.split('.')[0], instagram:'@'+dom.split('.')[0], facebook:'', other:''},
+      contacts:[{id:uid('c'),name:`${first} ${last}`,title:pick(TITLES),email:`${first.toLowerCase()}@${dom}`,phone:`020 ${rint(7000,8999)} ${rint(1000,9999)}`,whatsapp:`07${rint(400,999)} ${rint(100000,999999)}`,linkedin:`linkedin.com/in/${first.toLowerCase()}-${last.toLowerCase()}`}],
+      addedAt:added, month:monthOf(added), source:sources[i%sources.length], createdBy:pid||'admin', partnerId:pid, backupPartnerId:backup,
+      priority: score>=75?'hot':score>=55?'warm':'cold', score, services:svc, value, probability:Math.min(90,rank*12+rint(0,10)),
+      expectedClose: rank>=4 ? addDays(T, rint(7,40)) : '', status, next:null, lastContacted:'',
+      activities:acts, notes:[], stageHistory:hist, updatedAt:new Date().toISOString(),
+    };
+    if(status!=='new' && rank>=1 && i%4===0) L.notes.push({id:uid('n'),at:added+'T10:15',by:pid||'admin',kind:'internal',text:'Strong visual product but their Instagram has not posted in 5 weeks. Good fit for content + management retainer.'});
+    if(rank>=4 && i%2===1) L.notes.push({id:uid('n'),at:acts.find(a=>a.type==='Meeting')?.at||added,by:pid||'admin',kind:'meeting',text:'Decision maker attended. Pain points: inconsistent posting, no lead capture on site. Budget roughly £1.5–3k per month.'});
+    const lastAct = [...acts].reverse().find(a=>CONTACT_TYPES.includes(a.type)); if(lastAct) L.lastContacted = lastAct.at.slice(0,10);
+    if(status==='converted'){ const cd = addDays(added, Math.min(span, rint(18,30))); L.conversion = {date:cd, value, services:svc}; L.probability = 100; }
+    else if(status==='rejected'){ L.rejection = {reason:REJECT_REASONS[(i*5)%REJECT_REASONS.length], notes:'Revisit in 6–12 months if circumstances change.', date:addDays(added, Math.min(span,14))}; hist.push({s:'rejected',at:L.rejection.date}); }
+    else if(status==='notnow'){ const rc = [T, addDays(T,45), addDays(T,88)][nn++ % 3]; L.notNow = {reason:'Asked us to get back in touch after their busy season.', recontact:rc, date:addDays(added,10)}; L.next = {type:'Re-contact',text:`Re-contact ${first} as agreed`,due:rc,reminder:'Morning of'}; hist.push({s:'notnow',at:L.notNow.date}); }
+    else if(status==='unresponsive'){ hist.push({s:'unresponsive',at:addDays(added,20)}); acts.push({id:uid('a'),at:addDays(added,20)+'T11:00',by:pid||'admin',type:'Status Change',text:'No reply after 4 attempts across email, phone and WhatsApp.'}); }
+    if(!CLOSED.includes(status) && status!=='notnow' && !missingNextIdx.has(i)){
+      const off = dueCycle[dc++ % dueCycle.length];
+      const nx = {new:['Research','Research socials and find decision maker'],researching:['Call','First call to introduce RPS'],no_contact:['Email','Try email after two missed calls'],
+        initial:['Follow-up','Send case study and suggest a call'],followup:['Call','Follow up on case study'],meeting:['Meeting','Discovery meeting'],
+        qualified:['Proposal','Send proposal'],proposal:['Follow-up','Chase proposal feedback'],negotiation:['Call','Agree final scope and start date']}[status];
+      L.next = {type:nx[0], text:nx[1], due:addDays(T,off), reminder:'Morning of'};
+      if(status==='meeting'){ L.meetingDate = L.next.due; L.next.due = addDays(T, Math.abs(off)%5); L.meetingDate = L.next.due; }
+      if(status==='proposal'){ L.proposalDate = addDays(T,-rint(2,9)); }
+    }
+    if(['negotiation','converted'].includes(status)) L.proposalDate = addDays(added, Math.min(span-1, 18));
+    leads[id] = L;
+  });
+  return leads;
+}
+
+/* ---------- Data layer (Supabase) ---------- */
+// Each lead is one row: key columns (owner, backup, account manager, status) drive security rules;
+// the full lead document (contacts, activities, notes) lives in the jsonb "data" column.
+let sb = null, channel = null;
+const leadRow = l => ({ id:l.id, data:clone(l), partner_id:l.partnerId||null, backup_partner_id:l.backupPartnerId||null, account_manager_id:l.accountManagerId||null, status:l.status, updated_at:new Date().toISOString() });
+const DB = {
+  async upsertLeads(list){ const { error } = await sb.from('leads').upsert(list.map(leadRow)); if(error) throw error; },
+  async deleteLead(id){ const { error } = await sb.from('leads').delete().eq('id', id); if(error) throw error; },
+  async deleteAll(){ const { error } = await sb.from('leads').delete().neq('id', ''); if(error) throw error; },
+  async saveSettings(st){ const { error } = await sb.from('settings').upsert({ id:1, data:clone(st), updated_at:new Date().toISOString() }); if(error) throw error; },
+  async updateProfile(userId, patch){ const { error } = await sb.from('profiles').update(patch).eq('user_id', userId); if(error) throw error; },
+};
+function persistLocal(){ try{ localStorage.setItem(LS_KEY, JSON.stringify({leads:S.leads,settings:S.settings,role:S.localRole})); }catch(e){} }
+async function saveLead(l, msg){
+  l.updatedAt = new Date().toISOString();
+  S.leads[l.id] = l;
+  if(msg) toast(msg);
+  render();
+  if(S.mode==='db'){ try{ await DB.upsertLeads([l]); } catch(e){ console.error(e); toast(writeErr(e), 'err'); } }
+  else persistLocal();
+}
+async function deleteLead(id){
+  delete S.leads[id];
+  if(S.mode==='db'){ try{ await DB.deleteLead(id); }catch(e){ toast(writeErr(e),'err'); } }
+  else persistLocal();
+}
+async function saveSettings(msg){
+  if(msg) toast(msg);
+  render();
+  if(S.mode==='db'){ try{ await DB.saveSettings(S.settings); }catch(e){ console.error(e); toast(writeErr(e),'err'); } }
+  else persistLocal();
+}
+async function bulkWrite(list){
+  list.forEach(l=>S.leads[l.id]=l);
+  if(S.mode!=='db'){ persistLocal(); return {ok:list.length, failed:0}; }
+  let ok=0, failed=0;
+  for(let i=0;i<list.length;i+=200){ const chunk = list.slice(i,i+200);
+    try{ await DB.upsertLeads(chunk); ok += chunk.length; } catch(e){ console.error(e); failed += chunk.length; } }
+  return {ok, failed};
+}
+function writeErr(e){
+  const c = e?.code;
+  if(c==='42501' || /row-level security|permission denied/i.test(e?.message||'')) return "Couldn't save: you don't have permission to change this.";
+  if(/fetch|network/i.test(e?.message||'')) return "Couldn't save. Check your internet connection and try again.";
+  if(c==='invalid_argument') return "Couldn't save: you have view-only access to this workspace.";
+  if(c==='quota_exceeded') return "Couldn't save: storage is full. Delete old leads and try again.";
+  if(c==='resource_exhausted') return 'Saving too quickly. Wait a moment and try again.';
+  return "Couldn't save. Check your connection and try again.";
+}
+
+/* ---------- Derived ---------- */
+const needsNext = l => !CLOSED.includes(l.status);
+const isActive = l => !['converted','rejected','unresponsive'].includes(l.status);
+const contact = l => (l.contacts||[])[0] || {};
+function reached(l){ let r = ST[l.status]?.r || 0; (l.stageHistory||[]).forEach(h=>{ r = Math.max(r, ST[h.s]?.r||0); }); return r; }
+function issues(l){
+  if(!needsNext(l)) return [];
+  const out = [];
+  if(!l.partnerId) out.push('no assigned partner');
+  if(!l.next || !l.next.text) out.push('no next action');
+  if(!l.next || !l.next.due) out.push('no next follow-up date');
+  return out;
+}
+function bucket(l){
+  if(!needsNext(l)) return null;
+  if(!l.next || !l.next.due || !l.next.text) return 'none';
+  const d = diffDays(l.next.due, today());
+  if(l.status==='notnow' && d>7) return 'parked';
+  if(d<0) return 'overdue'; if(d===0) return 'today'; if(d===1) return 'tomorrow'; if(d<=7) return 'week'; return 'upcoming';
+}
+function allLeads(){ return Object.values(S.leads); }
+function scoped(){
+  let L = allLeads();
+  if(!isAdmin()){ const p = myPid(); L = L.filter(l=>p && (l.partnerId===p || l.backupPartnerId===p || l.accountManagerId===p)); }
+  else if(S.ui.pf==='none') L = L.filter(l=>!l.partnerId);
+  else if(S.ui.pf!=='all') L = L.filter(l=>l.partnerId===S.ui.pf);
+  return L;
+}
+function funnelFor(L){ return FUNNEL.map(([label,r])=>[label, r===0 ? L.length : L.filter(l=>reached(l)>=r).length]); }
+function statsFor(L){
+  return { leads:L.length, active:L.filter(isActive).length, contacted:L.filter(l=>reached(l)>=2).length, meetings:L.filter(l=>reached(l)>=3).length,
+    qualified:L.filter(l=>reached(l)>=4).length, proposals:L.filter(l=>reached(l)>=5).length, converted:L.filter(l=>l.status==='converted').length,
+    rejected:L.filter(l=>l.status==='rejected').length, overdue:L.filter(l=>bucket(l)==='overdue').length, value:L.filter(l=>l.status==='converted').reduce((a,l)=>a+(+l.conversion?.value||0),0) };
+}
+function monthsAvailable(){
+  const set = new Set(allLeads().map(l=>l.month).filter(Boolean)); set.add(thisMonth());
+  for(let i=1;i<=2;i++) set.add(shiftMonth(thisMonth(),-i));
+  set.add(shiftMonth(thisMonth(),1));
+  return [...set].sort().reverse();
+}
+function targetFor(m){ return +(S.settings.targets?.[m] ?? S.settings.defaultTarget ?? 50); }
+
+/* ---------- UI atoms ---------- */
+const ICONS = {
+  dash:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',
+  leads:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  pipe:'<rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="4" height="8" rx="1"/>',
+  follow:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  reports:'<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+  partners:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+  chat:'<path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/>',
+  li:'<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+  note:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  x:'<path d="M18 6L6 18M6 6l12 12"/>',
+  up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+  down:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+  spark:'<path d="M12 3l1.9 5.8L20 10.7l-6.1 1.9L12 18.5l-1.9-5.9L4 10.7l6.1-1.9z"/>',
+  alert:'<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>',
+  more:'<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>',
+  back:'<path d="M15 18l-6-6 6-6"/>', fwd:'<path d="M9 18l6-6-6-6"/>',
+  edit:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/>',
+  trash:'<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>',
+  filter:'<path d="M22 3H2l8 9.5V19l4 2v-8.5z"/>',
+  menu:'<path d="M3 6h18M3 12h18M3 18h18"/>',
+  globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  swap:'<path d="M17 3l4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/>',
+};
+const ic = (n,s=18) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]||''}</svg>`;
+function glyph(pid, s=14){
+  const m = pid ? partner(pid) : null; const idx = m ? (+m.shape||0)%3 : undefined;
+  if(idx===undefined) return `<svg width="${s}" height="${s}" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="2.5 2"/></svg>`;
+  const c = mcolor(pid);
+  const shape = [`<circle cx="8" cy="8" r="7" fill="${c}"/>`,`<rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="${c}"/>`,`<path d="M8 1 L15 14.5 H1 Z" fill="${c}"/>`][idx];
+  return `<svg width="${s}" height="${s}" viewBox="0 0 16 16" aria-hidden="true">${shape}</svg>`;
+}
+const logo = (s=30) => `<svg width="${s*1.9}" height="${s}" viewBox="0 0 57 30" aria-hidden="true"><circle cx="9" cy="15" r="8" fill="var(--p1)"/><rect x="21" y="7" width="16" height="16" rx="3" fill="var(--p2)"/><path d="M48 6 L56.5 23.5 H39.5 Z" fill="var(--p3)"/></svg>`;
+const pchip = pid => `<span class="pglyph">${glyph(pid)}<span>${esc(pname(pid))}</span></span>`;
+const stChip = k => { const s = ST[k]||{l:k,tone:''}; return `<span class="chip ${s.tone}">${esc(s.l)}</span>`; };
+const prChip = p => p ? `<span class="chip ${p}">${esc((PRIORITIES.find(x=>x[0]===p)||[,p])[1])}</span>` : '';
+const scoreEl = n => `<span class="score">${n??'—'}<i><b style="width:${Math.max(0,Math.min(100,+n||0))}%"></b></i></span>`;
+const dueEl = s => `<span class="due ${dueClass(s)}">${esc(relDue(s))}</span>`;
+const opts = (list, val, blank) => (blank!==undefined ? `<option value="">${esc(blank)}</option>` : '') + list.map(o=>{ const [v,l] = Array.isArray(o)?o:[o,o]; return `<option value="${esc(v)}"${String(v)===String(val??'')?' selected':''}>${esc(l)}</option>`; }).join('');
+const partnerOpts = (val, blank='Unassigned') => { const o = teamOpts(); if(val && !o.some(x=>x[0]===val) && partner(val)) o.push([val, pname(val)+' (inactive)']); return opts(o, val, blank); };
+const stageOpts = val => opts(STAGES.map(s=>[s.k,s.l]), val);
+const empty = (title, body, btn='') => `<div class="empty"><b>${esc(title)}</b>${body?`<p>${esc(body)}</p>`:''}${btn}</div>`;
+
+/* ---------- Toasts ---------- */
+function toast(msg, kind='', action){
+  const el = document.createElement('div'); el.className = 'toast '+kind; el.setAttribute('role','status');
+  el.innerHTML = `<span>${esc(msg)}</span>` + (action ? `<button class="btn sm" data-a="${esc(action.a)}" data-id="${esc(action.id||'')}">${esc(action.label)}</button>` : '');
+  $('#toasts').appendChild(el); setTimeout(()=>el.remove(), action?6000:3200);
+}
+
+/* ---------- Router ---------- */
+function route(){ const h = location.hash.replace(/^#\/?/,''); const parts = h.split('/').filter(Boolean); return {name:parts[0]||'dashboard', id:parts[1], sub:parts[2]}; }
+const go = h => { if(location.hash === '#/'+h) render(); else location.hash = '/'+h; };
+const NAV = [['dashboard','Dashboard','dash'],['leads','Leads','leads'],['pipeline','Pipeline','pipe'],['followups','Follow-ups','follow'],['calendar','Calendar','cal'],['reports','Reports','reports'],['partners','Team','partners'],['settings','Settings','settings']];
+
+/* ---------- Render ---------- */
+function busy(){
+  if(S.sheet) return true;
+  const r = route(); if(r.name==='new' || r.sub==='edit' || (r.name==='import' && S.importState?.rows)) return true;
+  const a = document.activeElement;
+  return !!(a && a.closest && a.closest('main') && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.type!=='checkbox');
+}
+function scheduleRender(){ if(busy()) { S.pending = true; return; } render(); }
+function render(){
+  S.pending = false;
+  const root = $('#root');
+  if(S.mode==='db' && (S.auth==='signedout' || S.auth==='recovery')){ root.innerHTML = authView(); return; }
+  if(!S.ready){ root.innerHTML = `<div class="loading">Loading the pipeline…</div>`; return; }
+  const r = route();
+  if(S.mode==='db' && !isAdmin() && !me().partnerId && !S.ui.preview){ root.innerHTML = shell(seatView(), r); return; }
+  if(S.mode==='db' && isAdmin() && !me().partnerId && !S.ui.skipSeat && !S.members[S.uid]?.skipped && S.membersLoaded){ root.innerHTML = shell(seatView(true), r); return; }
+  let html;
+  try{
+    html = ({dashboard:dashView, leads:leadsView, lead:leadView, new:()=>formView(null), pipeline:pipeView, followups:followView,
+      calendar:calView, reports:reportsView, partners:partnersView, settings:settingsView, import:importView})[r.name]?.(r) ?? dashView();
+  }catch(e){ console.error(e); html = empty('Something went wrong showing this page', String(e.message||e), `<a class="btn" href="#/dashboard">Back to dashboard</a>`); }
+  const y = window.scrollY, keepScroll = S._lastRoute === location.hash;
+  root.innerHTML = shell(html, r);
+  S._lastRoute = location.hash;
+  if(!keepScroll) window.scrollTo(0,0); else window.scrollTo(0,y);
+  if(r.name==='leads') renderLeadResults();
+}
+function shell(content, r){
+  const fu = scoped().filter(l=>['overdue','today'].includes(bucket(l))).length;
+  const m = me();
+  const nav = NAV.map(([k,l,i])=>`<a href="#/${k}" class="${r.name===k||(k==='leads'&&['lead','new','import'].includes(r.name))?'on':''}" title="${l}">${ic(i)}<span>${l}</span>${k==='followups'&&fu?`<b class="count">${fu}</b>`:''}</a>`).join('');
+  const roleLabel = S.ui.preview ? 'Previewing as '+roleName(partner(S.ui.preview)?.role).toLowerCase() : (m.role==='admin' ? 'Admin' : roleName(partner(m.partnerId)?.role)) + (S.mode==='local' ? ' (this browser)' : '');
+  const bottom = [['dashboard','Today','dash'],['leads','Leads','leads'],['pipeline','Pipeline','pipe'],['followups','Follow-ups','follow']]
+    .map(([k,l,i])=>`<a href="#/${k}" class="${r.name===k||(k==='leads'&&r.name==='lead')?'on':''}">${ic(i,20)}${l}${k==='followups'&&fu?`<b class="count">${fu}</b>`:''}</a>`).join('')
+    + `<button data-a="moremenu" class="${['calendar','reports','partners','settings'].includes(r.name)?'on':''}">${ic('more',20)}More</button>`;
+  const pf = isAdmin() ? `<select class="input pf" data-c="pf" aria-label="Show leads for" style="width:auto;max-width:190px">${opts([['all','Everyone'],...teamOpts(),['none','Unassigned']], S.ui.pf)}</select>` : '';
+  return `
+  <div class="app">
+    <aside class="side ${S.ui.navOpen?'open':''}">
+      <a class="brand" href="#/dashboard">${logo(26)}<div><b>Rock Paper Scissors</b><small>Growth pipeline</small></div></a>
+      <nav class="nav" aria-label="Main">${nav}</nav>
+      <div class="side-foot"><div class="me">${glyph(myPid(),22)}<div><b>${esc(myPid()?pname(myPid()):'Admin')}</b><small>${esc(roleLabel)}</small></div></div>${S.mode==='db'?`<button class="btn ghost sm mt8" data-a="signout" style="width:100%;justify-content:flex-start">${ic('back',15)}<span>Sign out</span></button>`:''}</div>
+    </aside>
+    <div class="maincol">
+      ${S.mode==='local' ? `<div class="preview-banner" style="background:var(--amber-soft);color:var(--amber)">${ic('alert',16)} Demo mode: ${S.setup==='lib'?"couldn't load the database library (check your connection)":'not connected to Supabase yet (fill in config.js)'}. Data stays in this browser only.</div>`:''}
+      ${S.ui.preview ? `<div class="preview-banner">${ic('user',16)} Previewing the app as ${esc(pname(S.ui.preview))}. Team member permissions apply. <button class="btn sm" data-a="endpreview">Exit preview</button></div>`:''}
+      <header class="top">
+        <button class="btn ghost icon navtoggle" data-a="navtoggle" aria-label="Toggle navigation" style="display:none">${ic('menu')}</button>
+        <a class="mobile-brand" href="#/dashboard" aria-label="Dashboard">${logo(20)}</a>
+        <div class="searchwrap">${ic('search',17)}<input class="input search" id="gsearch" type="search" placeholder="Search company, contact, email, phone, website" autocomplete="off" value="${esc(S.ui.search)}" aria-label="Search leads"><div id="sres"></div></div>
+        ${pf}
+        <a class="btn pri addlead" href="#/new">${ic('plus',17)}<span>Add lead</span></a>
+      </header>
+      <main id="main">${content}</main>
+    </div>
+    <nav class="bottom" aria-label="Main">${bottom}</nav>
+  </div>`;
+}
+
+/* ---------- Seat picker ---------- */
+function seatView(adminToo){
+  const taken = Object.entries(S.members).filter(([u,m])=>u!==S.uid && m.partnerId).map(([,m])=>m.partnerId);
+  return `<div class="card" style="max-width:640px;margin:40px auto">
+    <h1 style="font-size:30px">Who are you?</h1>
+    <p class="muted mt8">Pick your name so the app can show your leads and follow-ups. Not listed? Ask an admin to add you on the Team page. ${adminToo?'As the workspace admin you can also skip this and manage everything without a seat.':'An admin can change this later in Settings.'}</p>
+    <div class="seat">${activeTeam().map(p=>`<button data-a="takeseat" data-id="${p.id}">${glyph(p.id,34)}<span>${esc(p.name)}</span><small class="muted">${esc(p.title||roleName(p.role))}</small>${taken.includes(p.id)?'<small class="muted">Already claimed</small>':''}</button>`).join('')}</div>
+    ${adminToo?`<div class="row mt16" style="justify-content:flex-end"><button class="btn ghost" data-a="skipseat">Continue as admin only</button></div>`:''}
+  </div>`;
+}
+
+/* ---------- Dashboard ---------- */
+function dashView(){
+  const L = scoped(), T = today();
+  if(!allLeads().length) return firstRunView();
+  const over = L.filter(l=>bucket(l)==='overdue').sort((a,b)=>a.next.due.localeCompare(b.next.due));
+  const due = L.filter(l=>bucket(l)==='today');
+  const upc = L.filter(l=>['tomorrow','week'].includes(bucket(l))).sort((a,b)=>a.next.due.localeCompare(b.next.due));
+  const meetingsWeek = L.filter(l=>isActive(l) && l.next?.type==='Meeting' && l.next.due>=T && diffDays(l.next.due,T)<=7).length;
+  const p = myPid();
+  const mine = allLeads().filter(l=>p && l.partnerId===p && isActive(l)).length;
+  const cm = thisMonth();
+  const ML = L.filter(l=>l.month===cm);
+  const convMonth = L.filter(l=>l.status==='converted' && monthOf(l.conversion?.date)===cm).length;
+  const allConv = L.filter(l=>l.status==='converted').length, decided = L.filter(l=>['converted','rejected','unresponsive'].includes(l.status)).length;
+  const kp = [
+    ['New leads this month', ML.length, '', 'month'],
+    ['My active leads', p ? mine : '—', '', 'mine'],
+    ['Unassigned leads', allLeads().filter(l=>!l.partnerId && isActive(l)).length, '', 'unassigned'],
+    ['Due today', due.length, due.length?'amber':'', 'today'],
+    ['Overdue', over.length, over.length?'red':'', 'overdue'],
+    ['Hot prospects', L.filter(l=>l.priority==='hot' && isActive(l)).length, '', 'hot'],
+    ['Meetings booked', L.filter(l=>l.status==='meeting').length, '', 'meeting'],
+    ['Proposals sent', L.filter(l=>['proposal','negotiation'].includes(l.status)).length, '', 'proposal'],
+    ['Converted this month', convMonth, convMonth?'green':'', 'converted'],
+    ['Conversion rate', pct(allConv, decided)+'%', '', 'reports'],
+  ];
+  const hr = new Date().getHours(), hello = hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  const who = p ? pname(p) : 'team';
+  const missing = L.filter(l=>issues(l).length);
+  const sumParts = [];
+  if(over.length) sumParts.push(`<b class="r">${over.length} overdue</b>`);
+  sumParts.push(`<b class="a">${due.length} due today</b>`);
+  sumParts.push(`${meetingsWeek} meeting${meetingsWeek===1?'':'s'} in the next 7 days`);
+  const item = (l, cls) => `<a class="aitem ${cls}" href="#/lead/${l.id}"><span class="bar"></span><div style="min-width:0"><div class="t">${esc(l.company)}</div><div class="s">${esc(l.next.type)}: ${esc(l.next.text)}</div><div class="s tiny muted" style="margin-top:2px">${pchip(l.partnerId)} ${l.priority==='hot'?' <span class="chip hot" style="margin-left:4px">Hot</span>':''}</div></div>${dueEl(l.next.due)}</a>`;
+  const group = (title, list, cls, emptyMsg, max=8) => `<div class="agroup"><h3>${title} <span class="n">${list.length}</span></h3>${list.length ? list.slice(0,max).map(l=>item(l,cls)).join('') + (list.length>max?`<a class="btn sm ghost" href="#/followups">View all ${list.length}</a>`:'') : `<p class="small muted" style="padding:6px 0 4px">${emptyMsg}</p>`}</div>`;
+  return `
+  <section class="hero">
+    <div><p class="hello">${hello}, ${esc(who)}. It's ${fmtLong(T)}.</p><h1>Who to chase today</h1><p class="chase-sum">${sumParts.join(', ')}.</p></div>
+    <div class="row"><a class="btn" href="#/followups">${ic('follow',17)} All follow-ups</a></div>
+  </section>
+  ${missing.length ? `<div class="warnbar">${ic('alert',18)} <span>${missing.length} active lead${missing.length>1?'s are':' is'} missing an owner, next action or due date.</span><a class="btn sm" href="#/followups">Fix now</a></div>`:''}
+  <div class="kpis">${kp.map(([l,v,c,k])=>`<button class="kpi ${c}" data-a="kpi" data-k="${k}"><span class="v">${v}</span><span class="l">${l}</span></button>`).join('')}</div>
+  <div class="dash">
+    <section class="card acts-card">
+      <div class="card-h"><h2>Today's actions</h2><a class="btn sm ghost" href="#/calendar">${ic('cal',16)} Calendar</a></div>
+      ${group('Overdue', over, 'over', 'Great! You have no overdue follow-ups.')}
+      ${group('Due today', due, 'today', 'Nothing due today.')}
+      ${group('Upcoming', upc, '', 'Nothing scheduled for the next 7 days.', 6)}
+    </section>
+    <div class="stack">
+      <section class="card"><div class="card-h"><h2>Pipeline funnel</h2><span class="tiny muted">Leads that reached each stage</span></div>${funnelEl(funnelFor(L))}</section>
+      ${monthCard()}
+    </div>
+  </div>
+  ${isAdmin() || S.mode==='local' ? `<section class="card mt24">${partnerSummary()}</section>` : ''}`;
+}
+function firstRunView(){
+  const canSeed = isAdmin();
+  return `<div class="card" style="max-width:640px;margin:40px auto;text-align:left">
+    <div class="row">${logo(30)}</div>
+    <h1 class="mt16" style="font-size:32px">Add your first prospect</h1>
+    <p class="muted mt8">The pipeline is empty. Add leads one at a time, import a CSV, or load realistic demo data to explore every screen.</p>
+    <div class="row wrap mt16"><a class="btn pri" href="#/new">${ic('plus',17)} Add lead</a><a class="btn" href="#/import">${ic('up',17)} Import CSV</a>
+    ${canSeed?`<button class="btn" data-a="loaddemo">${ic('spark',17)} Load demo data</button>`:''}</div>
+    ${canSeed?'':'<p class="small muted mt12">Only an admin can load demo data.</p>'}
+  </div>`;
+}
+function funnelEl(f){
+  const max = Math.max(1, f[0][1]);
+  return `<div class="funnel">${f.map(([l,n],i)=>`<div class="fstep"><span>${l}</span><div class="track"><div class="fill" style="width:${n/max*100}%"></div></div><span class="num">${n}${i?`<small>${pct(n,f[0][1])}%</small>`:''}</span></div>`).join('')}</div>`;
+}
+function monthCard(){
+  const m = S.ui.dashMonth, L = scoped(), ML = L.filter(l=>l.month===m), s = statsFor(ML);
+  const months = [...Array(6)].map((_,i)=>shiftMonth(thisMonth(),i-5));
+  const series = months.map(mm=>{ const x = L.filter(l=>l.month===mm); return [mm, x.length, x.filter(l=>l.status==='converted').length]; });
+  const max = Math.max(1,...series.map(s=>s[1]));
+  return `<section class="card">
+    <div class="card-h"><h2>Monthly performance</h2><select class="input" data-c="dashMonth" style="width:auto" aria-label="Month">${opts(monthsAvailable().map(x=>[x,monthLabel(x)]), m)}</select></div>
+    <div class="mstats">
+      <div class="mstat"><b>${s.leads}</b><span>Prospects</span></div>
+      <div class="mstat"><b>${s.contacted}</b><span>Contacted, ${pct(s.contacted,s.leads)}%</span></div>
+      <div class="mstat"><b>${s.meetings}</b><span>Meetings, ${pct(s.meetings,s.leads)}%</span></div>
+      <div class="mstat"><b>${s.qualified}</b><span>Qualified, ${pct(s.qualified,s.leads)}%</span></div>
+      <div class="mstat"><b>${s.proposals}</b><span>Proposals, ${pct(s.proposals,s.leads)}%</span></div>
+      <div class="mstat"><b>${s.converted}</b><span>Converted, ${pct(s.converted,s.leads)}%</span></div>
+    </div>
+    <div class="row between mt16"><h3>Last 6 months</h3><div class="legend"><span><i style="background:var(--accent)"></i>Prospects</span><span><i style="background:var(--green)"></i>Converted</span></div></div>
+    <div class="bars" role="img" aria-label="Prospects and conversions for the last six months">${series.map(([mm,a,b])=>`<div class="col ${mm===m?'on':''}"><div class="pair"><div class="b1" style="height:${a/max*100}%" title="${a} prospects"></div><div class="b2" style="height:${b/max*100}%" title="${b} converted"></div></div><small>${monthShort(mm)}</small></div>`).join('')}</div>
+  </section>`;
+}
+function partnerSummary(){
+  const all = allLeads(), people = team().filter(p=>p.active!==false || all.some(l=>l.partnerId===p.id && isActive(l))), maxActive = Math.max(1,...people.map(p=>all.filter(l=>l.partnerId===p.id && isActive(l)).length));
+  return `<div class="card-h"><h2>Team summary</h2><a class="btn sm ghost" href="#/partners">Team</a></div>
+  <div class="prow h"><span>Owner</span><span>Leads</span><span>Contacted</span><span>Meetings</span><span>Proposals</span><span>Converted</span></div>
+  ${people.map(p=>{ const s = statsFor(all.filter(l=>l.partnerId===p.id)); return `<div class="prow"><div>${pchip(p.id)}<div class="w" title="${s.active} active leads"><b style="width:${s.active/maxActive*100}%;background:${mcolor(p.id)}"></b></div><span class="tiny muted">${s.active} active${s.overdue?`, <span style="color:var(--red)">${s.overdue} overdue</span>`:''}</span></div><span>${s.leads}</span><span>${s.contacted}</span><span>${s.meetings}</span><span>${s.proposals}</span><span>${s.converted}</span></div>`; }).join('')}`;
+}
+
+/* ---------- Leads ---------- */
+const FILTER_DEFS = () => [
+  ...(isAdmin()?[['partner','Assigned to',[['none','Unassigned'],...teamOpts()]]]:[]),
+  ['am','Account manager',[['none','None'],...teamOpts()]],
+  ['status','Status',STAGES.map(s=>[s.k,s.l])],
+  ['state','Converted / active / lost',[['active','Active'],['converted','Converted'],['lost','Lost (rejected)'],['parked','Not now'],['unresponsive','Unresponsive']]],
+  ['industry','Industry',INDUSTRIES],
+  ['location','Location',[...new Set(allLeads().map(l=>l.location).filter(Boolean))].sort()],
+  ['source','Lead source',S.settings.sources],
+  ['priority','Priority',PRIORITIES],
+  ['month','Month added',monthsAvailable().map(m=>[m,monthLabel(m)])],
+  ['due','Due date',[['overdue','Overdue'],['today','Due today'],['week','Next 7 days'],['none','No follow-up set']]],
+  ['score','Lead score',[['75','75 and above'],['50','50 to 74'],['0','Below 50']]],
+  ['service','Potential service',SERVICES],
+];
+function matchSearch(l,q){
+  if(!q) return true; q = q.toLowerCase();
+  const hay = [l.company,l.website,l.location,...(l.contacts||[]).flatMap(c=>[c.name,c.email,c.phone,c.whatsapp])].join(' ').toLowerCase();
+  if(hay.includes(q)) return true;
+  const d = q.replace(/\D/g,''); return d.length>=4 && (l.contacts||[]).some(c=>(String(c.phone)+String(c.whatsapp)).replace(/\D/g,'').includes(d));
+}
+function filteredLeads(){
+  const f = S.ui.filters, q = S.ui.search.trim();
+  let L = scoped().filter(l=>matchSearch(l,q));
+  if(f.partner) L = L.filter(l=> f.partner==='none' ? !l.partnerId : l.partnerId===f.partner);
+  if(f.am) L = L.filter(l=> f.am==='none' ? !l.accountManagerId : l.accountManagerId===f.am);
+  if(f.status) L = L.filter(l=>l.status===f.status);
+  if(f.state) L = L.filter(l=>({active:isActive(l)&&l.status!=='notnow',converted:l.status==='converted',lost:l.status==='rejected',parked:l.status==='notnow',unresponsive:l.status==='unresponsive'})[f.state]);
+  ['industry','location','source','priority','month'].forEach(k=>{ if(f[k]) L = L.filter(l=>l[k]===f[k]); });
+  if(f.due) L = L.filter(l=>{ const b = bucket(l); return f.due==='week' ? ['today','tomorrow','week'].includes(b) : b===f.due; });
+  if(f.score) L = L.filter(l=> f.score==='75' ? l.score>=75 : f.score==='50' ? l.score>=50&&l.score<75 : l.score<50);
+  if(f.service) L = L.filter(l=>(l.services||[]).includes(f.service));
+  const sorters = {
+    due:(a,b)=>(a.next?.due||'9999').localeCompare(b.next?.due||'9999'),
+    added:(a,b)=>b.addedAt.localeCompare(a.addedAt), score:(a,b)=>(b.score||0)-(a.score||0), company:(a,b)=>a.company.localeCompare(b.company),
+  };
+  return L.sort(sorters[S.ui.sort]||sorters.due);
+}
+function leadsView(){
+  const defs = FILTER_DEFS(), f = S.ui.filters, active = Object.entries(f).filter(([,v])=>v);
+  return `
+  <div class="page-h"><div><h1>Leads</h1><p id="leadCount"></p></div>
+    <div class="row wrap"><button class="btn" data-a="export">${ic('down',17)} Export</button><a class="btn" href="#/import">${ic('up',17)} Import CSV</a><a class="btn pri" href="#/new">${ic('plus',17)} Add lead</a></div></div>
+  <div class="toolbar">
+    <div class="searchwrap grow" style="position:relative;max-width:420px">${ic('search',17)}<input class="input search" id="lsearch" type="search" placeholder="Search leads" value="${esc(S.ui.search)}" aria-label="Search leads"></div>
+    <button class="btn ${S.ui.showFilters?'pri':''}" data-a="togglefilters">${ic('filter',16)} Filters${active.length?` (${active.length})`:''}</button>
+    <select class="input" data-c="sort" style="width:auto" aria-label="Sort">${opts([['due','Sort: next due'],['added','Sort: newest'],['score','Sort: lead score'],['company','Sort: company A–Z']], S.ui.sort)}</select>
+  </div>
+  ${S.ui.showFilters ? `<div class="filters">${defs.map(([k,l,list])=>`<label class="f">${l}<select class="input" data-c="filter" data-k="${k}">${opts(list, f[k], 'Any')}</select></label>`).join('')}</div>`:''}
+  ${active.length ? `<div class="activechips">${active.map(([k,v])=>{ const d = defs.find(x=>x[0]===k); const lab = d ? (d[2].find(o=>(Array.isArray(o)?o[0]:o)===v)||v) : v; return `<span class="chip blue" data-a="clearfilter" data-k="${k}" role="button" tabindex="0">${esc(d?.[1]||k)}: ${esc(Array.isArray(lab)?lab[1]:lab)} ${ic('x',12)}</span>`; }).join('')}<span class="chip" data-a="clearfilters" role="button" tabindex="0">Clear all</span></div>`:''}
+  <div id="leadResults"></div>`;
+}
+function renderLeadResults(){
+  const box = $('#leadResults'); if(!box) return;
+  const L = filteredLeads();
+  const c = $('#leadCount'); if(c) c.textContent = `${L.length} of ${scoped().length} leads${isAdmin()&&S.ui.pf!=='all'?' for '+(S.ui.pf==='none'?'Unassigned':pname(S.ui.pf)):''}`;
+  if(!L.length){
+    box.innerHTML = scoped().length ? empty('No leads match', 'Try a different search or clear the filters.', `<button class="btn" data-a="clearfilters">Clear filters</button>`)
+      : empty(isAdmin()?'Add your first prospect':'No leads assigned to you.', isAdmin()?'Leads you add or import will appear here.':'When an admin assigns a lead to you it shows up here.', `<a class="btn pri" href="#/new">${ic('plus',17)} Add lead</a>`);
+    return;
+  }
+  const rows = L.map(l=>{ const c = contact(l); const iss = issues(l); return `<tr data-a="open" data-id="${l.id}">
+    <td><div class="co">${esc(l.company)}</div><div class="sub">${esc(l.location||'')}</div></td>
+    <td>${esc(c.name||'—')}<div class="sub">${esc(c.title||'')}</div></td>
+    <td>${pchip(l.partnerId)}</td><td>${esc(l.industry||'—')}</td><td>${stChip(l.status)}</td><td>${prChip(l.priority)}</td><td>${scoreEl(l.score)}</td>
+    <td class="nx">${l.next?.text ? esc(l.next.type+': '+l.next.text) : (iss.length?`<span class="chip amber">${ic('alert',12)} Not set</span>`:'<span class="muted">—</span>')}</td>
+    <td>${l.next?.due ? dueEl(l.next.due) : '—'}</td><td class="sub">${l.lastContacted?fmtShort(l.lastContacted):'—'}</td><td class="sub">${fmtShort(l.addedAt)}</td></tr>`; }).join('');
+  const cards = L.map(l=>{ const c = contact(l); return `<div class="lcard ${l.next?.due?dueClass(l.next.due):''}" data-a="open" data-id="${l.id}" role="link" tabindex="0">
+    <div class="row between"><b>${esc(l.company)}</b>${prChip(l.priority)}</div>
+    <div class="small muted">${esc(c.name||'No contact')}${c.title?', '+esc(c.title):''}</div>
+    <div class="row wrap mt8">${stChip(l.status)}${pchip(l.partnerId)}${scoreEl(l.score)}</div>
+    <div class="row between mt8 small"><span class="grow" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l.next?.text?esc(l.next.type+': '+l.next.text):'<span style="color:var(--amber)">No next action</span>'}</span>${l.next?.due?dueEl(l.next.due):''}</div></div>`; }).join('');
+  box.innerHTML = `<div class="tbl-wrap leads-tbl"><table class="tbl"><thead><tr><th>Company</th><th>Contact</th><th>Owner</th><th>Industry</th><th>Status</th><th>Priority</th><th>Lead score</th><th>Next action</th><th>Due date</th><th>Last contacted</th><th>Added</th></tr></thead><tbody>${rows}</tbody></table></div><div class="lcards">${cards}</div>`;
+}
+
+/* ---------- Lead detail ---------- */
+function leadView(r){
+  if(r.sub==='edit') return formView(r.id);
+  const l = S.leads[r.id];
+  if(!l) return empty('Lead not found', 'It may have been deleted or you may not have access.', `<a class="btn" href="#/leads">Back to leads</a>`);
+  if(!isAdmin() && !canEdit(l)) return empty('This lead is assigned to another partner', '', `<a class="btn" href="#/leads">Back to leads</a>`);
+  const c = contact(l), ed = canEdit(l), iss = issues(l);
+  const nd = l.next?.due ? dueClass(l.next.due) : '';
+  const acts = [...(l.activities||[])].sort((a,b)=>b.at.localeCompare(a.at));
+  const tab = S.ui.noteTab[l.id] || 'internal';
+  const notes = (l.notes||[]).filter(n=>n.kind===tab).sort((a,b)=>b.at.localeCompare(a.at));
+  const k = S.keep;
+  const qa = [
+    c.phone ? `<a class="btn sm" href="tel:${esc(c.phone.replace(/\s/g,''))}" data-a="qa" data-t="Call" data-id="${l.id}">${ic('phone',16)} Call</a>` : '',
+    c.email ? `<a class="btn sm" href="mailto:${esc(c.email)}" data-a="qa" data-t="Email" data-id="${l.id}">${ic('mail',16)} Email</a>` : '',
+    (c.whatsapp||c.phone) ? `<a class="btn sm" href="${esc(waLink(c.whatsapp||c.phone))}" target="_blank" rel="noopener" data-a="qa" data-t="WhatsApp" data-id="${l.id}">${ic('chat',16)} WhatsApp</a>` : '',
+    c.linkedin ? `<a class="btn sm" href="${esc(extUrl(c.linkedin))}" target="_blank" rel="noopener" data-a="qa" data-t="LinkedIn" data-id="${l.id}">${ic('li',16)} LinkedIn</a>` : '',
+    ed ? `<button class="btn sm" data-a="focus" data-f="note-${l.id}">${ic('note',16)} Add note</button>` : '',
+    ed ? `<button class="btn sm" data-a="focus" data-f="act-${l.id}">${ic('plus',16)} Add activity</button>` : '',
+    ed ? `<button class="btn sm" data-a="editnext" data-id="${l.id}">${ic('cal',16)} Schedule follow-up</button>` : '',
+    ed ? `<button class="btn sm" data-a="stagesheet" data-id="${l.id}">${ic('pipe',16)} Change status</button>` : '',
+    isAdmin() ? `<button class="btn sm" data-a="owner" data-id="${l.id}">${ic('swap',16)} Assign owner</button>` : '',
+  ].join('');
+  const statusBanner = l.status==='converted' && l.conversion ? `<div class="banner green"><b>Converted ${fmtD(l.conversion.date)}</b> for ${money(l.conversion.value)}/month. Services sold: ${esc((l.conversion.services||[]).join(', ')||'—')}</div>`
+    : l.status==='rejected' && l.rejection ? `<div class="banner red"><b>Rejected:</b> ${esc(l.rejection.reason)}${l.rejection.notes?'. '+esc(l.rejection.notes):''}</div>`
+    : l.status==='notnow' && l.notNow ? `<div class="banner grey"><b>Not now.</b> ${esc(l.notNow.reason)} Re-contact on <b>${fmtD(l.notNow.recontact)}</b>. It returns to ${esc(pname(l.partnerId))}'s follow-ups automatically.</div>`
+    : l.status==='unresponsive' ? `<div class="banner grey"><b>Unresponsive.</b> Move it back into the pipeline if they get in touch.</div>` : '';
+  const nextBlock = needsNext(l) && (!l.next || !l.next.due || !l.next.text) ? `
+      <div class="alertbox"><b>${ic('alert',18)} Action required</b><p>This lead has ${esc(iss.filter(x=>x!=='no assigned partner').join(' and ')||'no next action')}.${!l.partnerId?' It also has no owner.':''}</p>
+      ${ed?`<button class="btn pri" data-a="editnext" data-id="${l.id}">${ic('cal',16)} Schedule follow-up</button>`:''}</div>`
+    : l.next ? `<section class="card next ${nd}"><div class="row between"><span class="lbl">Next action${nd==='over'?', overdue':nd==='today'?', due today':''}</span><span class="chip">${esc(l.next.type)}</span></div>
+      <div class="what">${esc(l.next.text)}</div>
+      <div class="small muted">Due <b style="color:var(--ink)">${fmtD(l.next.due)}</b> (${esc(relDue(l.next.due))})${l.next.reminder&&l.next.reminder!=='None'?`. Reminder: ${esc(l.next.reminder)}`:''}</div>
+      ${ed?`<div class="row wrap mt12"><button class="btn pri" data-a="complete" data-id="${l.id}">${ic('check',16)} Complete action</button><button class="btn" data-a="resched" data-id="${l.id}">Reschedule</button><button class="btn ghost" data-a="editnext" data-id="${l.id}">${ic('edit',16)} Edit</button></div>`:''}
+      ${!l.partnerId?`<p class="small mt12" style="color:var(--amber)">${ic('alert',14)} No owner assigned yet.</p>`:''}</section>`
+    : `<section class="card"><p class="muted small">No next action needed for a ${esc(ST[l.status].l.toLowerCase())} lead.</p>${ed?`<button class="btn sm mt8" data-a="editnext" data-id="${l.id}">Schedule a follow-up anyway</button>`:''}</section>`;
+  const otherContacts = (l.contacts||[]).slice(1);
+  return `
+  <a href="#/leads" class="btn ghost sm" style="margin:-6px 0 8px -8px">${ic('back',16)} Leads</a>
+  <div class="lead-h"><div class="grow">
+    <h1>${esc(l.company)}</h1>
+    <div class="small muted mt8">${[l.industry,l.location,l.size?l.size+' staff':''].filter(Boolean).map(esc).join(', ')}${l.website?` <a href="${esc(extUrl(l.website))}" target="_blank" rel="noopener" style="margin-left:6px">${esc(normWeb(l.website))}</a>`:''}</div>
+    <div class="lead-meta">
+      ${ed?`<select class="input" data-c="status" data-id="${l.id}" aria-label="Status">${stageOpts(l.status)}</select>`:stChip(l.status)}
+      ${ed?`<select class="input" data-c="priority" data-id="${l.id}" aria-label="Priority">${opts(PRIORITIES,l.priority)}</select>`:prChip(l.priority)}
+      ${isAdmin()?`<select class="input" data-c="assign" data-id="${l.id}" aria-label="Assigned to">${partnerOpts(l.partnerId)}</select>`:pchip(l.partnerId)}
+      ${scoreEl(l.score)}
+    </div></div>
+    <div class="row">${ed?`<a class="btn" href="#/lead/${l.id}/edit">${ic('edit',16)} Edit</a>`:''}${isAdmin()?`<button class="btn danger icon" data-a="delete" data-id="${l.id}" aria-label="Delete lead">${ic('trash',17)}</button>`:''}</div>
+  </div>
+  <div class="qa">${qa}</div>
+  ${statusBanner}
+  <div class="ldgrid">
+    <div class="stack">
+      ${nextBlock}
+      <section class="card"><div class="card-h"><h2>Activity</h2><span class="tiny muted">${acts.length} logged</span></div>
+        ${ed?`<div class="composer"><select class="input" data-keep="acttype-${l.id}" aria-label="Activity type">${opts(ACT_TYPES.filter(t=>t!=='Status Change'), k['acttype-'+l.id]||'Call')}</select>
+          <input class="input" type="datetime-local" data-keep="actat-${l.id}" value="${esc(k['actat-'+l.id]||nowLocalInput())}" aria-label="When">
+          <textarea class="input" id="act-${l.id}" data-keep="act-${l.id}" placeholder="What happened? e.g. Spoke with ${esc((c.name||'them').split(' ')[0])}, wants pricing for social management.">${esc(k['act-'+l.id]||'')}</textarea>
+          <div class="row"><button class="btn pri sm" data-a="addact" data-id="${l.id}">Add activity</button></div></div>`:''}
+        <div class="timeline mt12">${acts.length ? acts.map(a=>`<div class="tl"><div class="d"><b>${fmtShort(a.at)}</b>${fmtTime(a.at)}</div><div class="dot"><i style="border-color:${a.type==='Status Change'?'var(--muted)':a.type==='Meeting'?'var(--violet)':a.type==='Proposal'?'var(--amber)':'var(--accent)'}"></i></div>
+          <div class="body"><div class="h"><span class="chip">${esc(a.type)}</span><span>${esc(byLabel(a.by))}</span></div><p>${esc(a.text)}</p></div></div>`).join('') : empty('No activity yet','Log your first call, email or message above.')}</div>
+      </section>
+      <section class="card"><div class="card-h"><h2>Notes</h2><div class="tabs" role="tablist"><button class="${tab==='internal'?'on':''}" data-a="notetab" data-id="${l.id}" data-t="internal">Internal</button><button class="${tab==='meeting'?'on':''}" data-a="notetab" data-id="${l.id}" data-t="meeting">Meeting notes</button></div></div>
+        ${ed?`<textarea class="input" id="note-${l.id}" data-keep="note-${l.id}" placeholder="${tab==='meeting'?'Who attended, pain points, budget, next steps…':'Add an internal note for the team…'}">${esc(k['note-'+l.id]||'')}</textarea><div class="row mt8" style="justify-content:flex-end"><button class="btn sm pri" data-a="addnote" data-id="${l.id}" data-t="${tab}">Add ${tab==='meeting'?'meeting note':'note'}</button></div>`:''}
+        <div class="stack mt12" style="gap:8px">${notes.length?notes.map(n=>`<div class="note"><div class="tiny muted">${fmtD(n.at)} at ${fmtTime(n.at)}, ${esc(byLabel(n.by))}</div><p>${esc(n.text)}</p></div>`).join(''):`<p class="small muted">No ${tab==='meeting'?'meeting notes':'internal notes'} yet.</p>`}</div>
+      </section>
+    </div>
+    <div class="stack">
+      <section class="card"><div class="card-h"><h2>Contact</h2></div>
+        <div class="contact-name">${esc(c.name||'No contact yet')}</div><div class="small muted">${esc(c.title||'')}</div>
+        <dl class="kv mt12">
+          <dt>Phone</dt><dd>${c.phone?`<a href="tel:${esc(c.phone.replace(/\s/g,''))}">${esc(c.phone)}</a>`:'—'}</dd>
+          <dt>Email</dt><dd>${c.email?`<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`:'—'}</dd>
+          <dt>WhatsApp</dt><dd>${c.whatsapp?`<a href="${esc(waLink(c.whatsapp))}" target="_blank" rel="noopener">${esc(c.whatsapp)}</a>`:'—'}</dd>
+          <dt>LinkedIn</dt><dd>${c.linkedin?`<a href="${esc(extUrl(c.linkedin))}" target="_blank" rel="noopener">Profile</a>`:'—'}</dd>
+        </dl>
+        ${otherContacts.length?`<div class="mt16"><h3 class="small">Other contacts</h3>${otherContacts.map(o=>`<div class="note mt8"><b>${esc(o.name)}</b> <span class="small muted">${esc(o.title||'')}</span><div class="small">${[o.email,o.phone].filter(Boolean).map(esc).join(', ')}</div></div>`).join('')}</div>`:''}
+      </section>
+      <section class="card"><div class="card-h"><h2>Opportunity</h2></div>
+        <div class="svc">${(l.services||[]).map(s=>`<span class="chip blue">${esc(s)}</span>`).join('')||'<span class="small muted">No services selected</span>'}</div>
+        <dl class="kv mt16">
+          <dt>Lead score</dt><dd>${scoreEl(l.score)}</dd>
+          <dt>Est. monthly value</dt><dd>${money(l.value)}</dd>
+          <dt>Probability</dt><dd>${l.probability!=null&&l.probability!==''?l.probability+'%':'—'}</dd>
+          <dt>Weighted value</dt><dd>${l.value&&l.probability?money(l.value*l.probability/100):'—'}</dd>
+          <dt>Expected close</dt><dd>${fmtD(l.expectedClose)}</dd>
+          ${l.meetingDate?`<dt>Meeting</dt><dd>${fmtD(l.meetingDate)}</dd>`:''}
+          ${l.proposalDate?`<dt>Proposal sent</dt><dd>${fmtD(l.proposalDate)}</dd>`:''}
+        </dl>
+      </section>
+      ${aiCard(l)}
+      <section class="card"><div class="card-h"><h2>Company</h2></div>
+        <dl class="kv">
+          <dt>Lead source</dt><dd>${esc(l.source||'—')}</dd>
+          <dt>Added</dt><dd>${fmtD(l.addedAt)}</dd>
+          <dt>Prospecting month</dt><dd>${esc(monthLabel(l.month))}</dd>
+          <dt>Created by</dt><dd>${esc(byLabel(l.createdBy))}</dd>
+          <dt>Backup owner</dt><dd>${esc(l.backupPartnerId?pname(l.backupPartnerId):'—')}</dd>
+          <dt>Account manager</dt><dd>${l.accountManagerId?pchip(l.accountManagerId):'—'}</dd>
+          <dt>Last contacted</dt><dd>${fmtD(l.lastContacted)}</dd>
+          ${l.socials?.linkedin?`<dt>LinkedIn</dt><dd><a href="${esc(extUrl(l.socials.linkedin))}" target="_blank" rel="noopener">Company page</a></dd>`:''}
+          ${l.socials?.instagram?`<dt>Instagram</dt><dd><a href="https://instagram.com/${esc(l.socials.instagram.replace(/^@|.*instagram\.com\//g,''))}" target="_blank" rel="noopener">${esc(l.socials.instagram)}</a></dd>`:''}
+          ${l.socials?.facebook?`<dt>Facebook</dt><dd><a href="${esc(extUrl(l.socials.facebook))}" target="_blank" rel="noopener">Page</a></dd>`:''}
+          ${l.socials?.other?`<dt>Other</dt><dd>${esc(l.socials.other)}</dd>`:''}
+        </dl>
+      </section>
+    </div>
+  </div>`;
+}
+
+/* ---------- Lead form ---------- */
+function blankLead(){
+  const p = myPid();
+  return { id:null, company:'', website:'', industry:'', location:'', size:'', socials:{linkedin:'',instagram:'',facebook:'',other:''},
+    contacts:[{id:uid('c'),name:'',title:'',email:'',phone:'',whatsapp:'',linkedin:''}], addedAt:today(), month:thisMonth(), source:'', createdBy:actor(),
+    partnerId:p||'', backupPartnerId:'', priority:'warm', score:50, services:[], value:'', probability:20, expectedClose:'', status:'new',
+    next:{type:'Research',text:'Research and make first contact',due:addDays(today(),1),reminder:'Morning of'}, activities:[], notes:[], stageHistory:[], firstNote:'' };
+}
+function formView(id){
+  const key = id || 'new';
+  if(!S.form || S.form.key!==key){ const src = id ? S.leads[id] : null; if(id && !src) return empty('Lead not found','',''); S.form = {key, draft: src ? clone(src) : blankLead(), dups:null, errors:{}}; }
+  const d = S.form.draft, e = S.form.errors, isNew = !id;
+  if(id && !canEdit(S.leads[id])) return empty('You can only edit leads assigned to you','','');
+  const fld = (name,label,val,type='text',extra='') => `<label class="f ${extra.includes('required')?'req':''}">${label}<input class="input" name="${name}" type="${type}" value="${esc(val??'')}" ${extra}>${e[name]?`<span class="hint" style="color:var(--red)">${esc(e[name])}</span>`:''}</label>`;
+  const sel = (name,label,list,val,blank) => `<label class="f">${label}<select class="input" name="${name}">${opts(list,val,blank)}</select></label>`;
+  const dupHtml = S.form.dups?.length ? `<div class="dup" role="alert"><b class="t">Possible duplicate found</b><p class="small" style="color:var(--ink-2)">These existing leads share a company name, website, email or phone.</p>
+    ${S.form.dups.map(x=>`<div class="dupitem"><div><b>${esc(x.l.company)}</b><div class="small muted">${esc(contact(x.l).name||'')}, ${esc(pname(x.l.partnerId))}, ${esc(ST[x.l.status].l)}. Matched on ${esc(x.why.join(', '))}</div></div><a class="btn sm" href="#/lead/${x.l.id}" data-a="viewdup">View existing</a></div>`).join('')}
+    <div class="row mt12" style="justify-content:flex-end"><button class="btn" type="button" data-a="createanyway">Create anyway</button></div></div>` : '';
+  return `
+  <a href="${isNew?'#/leads':'#/lead/'+id}" class="btn ghost sm" style="margin:-6px 0 8px -8px">${ic('back',16)} ${isNew?'Leads':'Back to lead'}</a>
+  <div class="page-h"><div><h1>${isNew?'Add lead':'Edit '+esc(d.company)}</h1><p>Every active lead needs an owner, a status, a next action and a due date.</p></div></div>
+  ${dupHtml}
+  <form id="leadForm" data-form="lead" novalidate>
+    <section class="card fsect"><h2>Company</h2><div class="grid3">
+      ${fld('company','Company name',d.company,'text','required autocomplete="organization"')}
+      ${fld('website','Website',d.website,'text','placeholder="www.example.co.uk"')}
+      ${sel('industry','Industry',INDUSTRIES,d.industry,'Select industry')}
+      ${fld('location','Location',d.location,'text','placeholder="Croydon"')}
+      ${sel('size','Company size',SIZES.map(s=>[s,s+' staff']),d.size,'Unknown')}
+      ${fld('s_linkedin','Company LinkedIn',d.socials?.linkedin)}
+      ${fld('s_instagram','Instagram',d.socials?.instagram,'text','placeholder="@handle"')}
+      ${fld('s_facebook','Facebook',d.socials?.facebook)}
+      ${fld('s_other','Other social links',d.socials?.other,'text','placeholder="TikTok, X, YouTube…"')}
+    </div></section>
+    <section class="card fsect"><div class="card-h" style="margin-bottom:10px"><h2>Contacts</h2><button class="btn sm" type="button" data-a="addcontact">${ic('plus',15)} Add another contact</button></div>
+      ${d.contacts.map((c,i)=>`<div class="contact-block"><div class="row between" style="margin-bottom:10px"><b class="small">${i===0?'Primary contact':'Contact '+(i+1)}</b>${i>0?`<button class="btn sm ghost" type="button" data-a="rmcontact" data-i="${i}">Remove</button>`:''}</div><div class="grid3">
+        ${fld('c_name_'+i,'Contact name',c.name)}${fld('c_title_'+i,'Job title',c.title)}${fld('c_email_'+i,'Email',c.email,'email')}
+        ${fld('c_phone_'+i,'Phone',c.phone,'tel')}${fld('c_whatsapp_'+i,'WhatsApp',c.whatsapp,'tel')}${fld('c_linkedin_'+i,'LinkedIn',c.linkedin)}</div></div>`).join('')}
+    </section>
+    <section class="card fsect"><h2>Lead</h2><div class="grid3">
+      ${fld('addedAt','Date added',d.addedAt,'date')}
+      ${fld('month','Prospecting month',d.month,'month')}
+      ${sel('source','Lead source',S.settings.sources,d.source,'Select source')}
+      ${isAdmin()?`<label class="f">Assigned to<select class="input" name="partnerId">${partnerOpts(d.partnerId)}</select></label>`:`<label class="f">Assigned to<input class="input" value="${esc(pname(d.partnerId||myPid()))}" disabled></label>`}
+      <label class="f">Backup owner<select class="input" name="backupPartnerId">${partnerOpts(d.backupPartnerId,'None')}</select></label>
+      <label class="f">Account manager<select class="input" name="accountManagerId">${partnerOpts(d.accountManagerId,'None')}</select></label>
+      ${sel('status','Status',STAGES.filter(s=>isNew?!['converted','rejected','notnow'].includes(s.k):true).map(s=>[s.k,s.l]),d.status)}
+      ${sel('priority','Priority',PRIORITIES,d.priority)}
+      ${fld('score','Lead score (0–100)',d.score,'number','min="0" max="100"')}
+      ${fld('value','Est. monthly value (£)',d.value,'number','min="0" step="50"')}
+      ${fld('probability','Probability (%)',d.probability,'number','min="0" max="100"')}
+      ${fld('expectedClose','Expected close date',d.expectedClose,'date')}
+      <label class="f">Created by<input class="input" value="${esc(byLabel(d.createdBy))}" disabled></label>
+    </div>
+    <div class="mt16"><span class="small strong" style="color:var(--ink-2)">Potential services</span><div class="svc mt8">${SERVICES.map(s=>`<label class="chip toggle-chip"><input type="checkbox" name="services" value="${esc(s)}" ${d.services.includes(s)?'checked':''}>${esc(s)}</label>`).join('')}</div></div>
+    </section>
+    <section class="card fsect"><h2>Next action</h2><div class="grid3">
+      ${sel('n_type','Action type',NEXT_TYPES,d.next?.type||'Call')}
+      ${fld('n_text','Description',d.next?.text,'text','placeholder="e.g. Call John to discuss proposal"')}
+      ${fld('n_due','Due date',d.next?.due,'date')}
+      ${sel('n_reminder','Reminder',REMINDERS,d.next?.reminder||'Morning of')}
+    </div></section>
+    ${isNew?`<section class="card fsect"><h2>First notes</h2><textarea class="input" name="firstNote" style="min-height:130px" placeholder="What caught your eye? Social presence, pain points, who referred them…">${esc(d.firstNote||'')}</textarea></section>`:''}
+    <div class="formbar"><a class="btn" href="${isNew?'#/leads':'#/lead/'+id}" data-a="cancelform">Cancel</a><button class="btn pri" type="submit">${ic('check',16)} ${isNew?'Save lead':'Save changes'}</button></div>
+  </form>`;
+}
+function collectForm(){
+  const f = $('#leadForm'); if(!f) return S.form?.draft;
+  const fd = new FormData(f), g = k => (fd.get(k)??'').toString().trim(), d = S.form.draft;
+  Object.assign(d, {company:g('company'),website:g('website'),industry:g('industry'),location:g('location'),size:g('size'),
+    socials:{linkedin:g('s_linkedin'),instagram:g('s_instagram'),facebook:g('s_facebook'),other:g('s_other')},
+    addedAt:g('addedAt')||today(), month:g('month')||monthOf(g('addedAt')||today()), source:g('source'), backupPartnerId:g('backupPartnerId')||null, accountManagerId:g('accountManagerId')||null,
+    status:g('status')||'new', priority:g('priority')||'warm', score:g('score')===''?'':Math.max(0,Math.min(100,+g('score'))), value:g('value')===''?'':+g('value'),
+    probability:g('probability')===''?'':Math.max(0,Math.min(100,+g('probability'))), expectedClose:g('expectedClose'), services:fd.getAll('services').map(String),
+    next:{type:g('n_type'),text:g('n_text'),due:g('n_due'),reminder:g('n_reminder')}, firstNote:g('firstNote') });
+  if(isAdmin()) d.partnerId = g('partnerId')||null; else if(!d.partnerId) d.partnerId = myPid();
+  d.contacts = d.contacts.map((c,i)=>({id:c.id||uid('c'),name:g('c_name_'+i),title:g('c_title_'+i),email:g('c_email_'+i),phone:g('c_phone_'+i),whatsapp:g('c_whatsapp_'+i),linkedin:g('c_linkedin_'+i)}));
+  return d;
+}
+function findDuplicates(d, exceptId){
+  const co = normCo(d.company), web = normWeb(d.website), mails = (d.contacts||[]).map(c=>normMail(c.email)).filter(Boolean), phones = (d.contacts||[]).flatMap(c=>[normPhone(c.phone),normPhone(c.whatsapp)]).filter(Boolean);
+  const out = [];
+  allLeads().forEach(l=>{ if(l.id===exceptId) return; const why = [];
+    if(co && co.length>2 && normCo(l.company)===co) why.push('company name');
+    if(web && normWeb(l.website)===web) why.push('website');
+    if(mails.length && (l.contacts||[]).some(c=>mails.includes(normMail(c.email)))) why.push('email');
+    if(phones.length && (l.contacts||[]).some(c=>phones.includes(normPhone(c.phone))||phones.includes(normPhone(c.whatsapp)))) why.push('phone');
+    if(why.length) out.push({l,why}); });
+  return out;
+}
+function submitLeadForm(force){
+  const d = collectForm(), e = {};
+  if(!d.company) e.company = 'Company name is required.';
+  if(needsNext(d)){ if(!d.next.text) e.n_text = 'Add the next action so this lead is not forgotten.'; if(!d.next.due) e.n_due = 'Pick a due date.'; }
+  S.form.errors = e;
+  if(Object.keys(e).length){ render(); toast('Fill in the highlighted fields.','err'); const first = Object.keys(e)[0]; setTimeout(()=>$(`[name="${first}"]`)?.focus(),30); return; }
+  const isNew = !d.id;
+  if(isNew && !force){ const dups = findDuplicates(d); if(dups.length){ S.form.dups = dups; render(); window.scrollTo(0,0); return; } }
+  const l = clone(d); const fn = l.firstNote; delete l.firstNote;
+  if(!needsNext(l) && !l.next?.text) l.next = null;
+  if(isNew){
+    l.id = 'L'+Date.now().toString(36).toUpperCase(); l.createdBy = actor();
+    l.stageHistory = [{s:'new',at:new Date().toISOString()}]; if(l.status!=='new') l.stageHistory.push({s:l.status,at:new Date().toISOString()});
+    l.activities = [{id:uid('a'),at:new Date().toISOString(),by:actor(),type:'Note',text:`Lead created${l.source?' from '+l.source:''}.`}];
+    l.notes = fn ? [{id:uid('n'),at:new Date().toISOString(),by:actor(),kind:'internal',text:fn}] : [];
+  } else {
+    const prev = S.leads[l.id];
+    if(prev && prev.status!==l.status){ l.stageHistory = [...(l.stageHistory||[]),{s:l.status,at:new Date().toISOString()}]; l.activities.push({id:uid('a'),at:new Date().toISOString(),by:actor(),type:'Status Change',text:`Moved from ${ST[prev.status].l} to ${ST[l.status].l}.`}); }
+    if(prev && prev.partnerId!==l.partnerId) l.activities.push({id:uid('a'),at:new Date().toISOString(),by:actor(),type:'Other',text:`Assigned to ${pname(l.partnerId)}.`});
+  }
+  S.form = null;
+  location.hash = '/lead/'+l.id;
+  saveLead(l, isNew ? (l.partnerId ? `Lead added and assigned to ${pname(l.partnerId)}.` : 'Lead added. Assign an owner next.') : 'Changes saved.');
+}
+
+/* ---------- Pipeline ---------- */
+function pipeView(){
+  const L = scoped();
+  const cols = STAGES.map(s=>{ const items = L.filter(l=>l.status===s.k).sort((a,b)=>(a.next?.due||'9999').localeCompare(b.next?.due||'9999'));
+    const val = items.reduce((a,l)=>a+(+l.value||0),0);
+    return `<div class="colm" data-drop="${s.k}"><div class="colm-h"><span class="sdot" style="background:${s.tone==='green'?'var(--green)':s.tone==='red'?'var(--red)':s.tone==='amber'?'var(--amber)':s.tone==='violet'?'var(--violet)':s.tone==='blue'?'var(--accent)':'var(--muted)'}"></span><h3>${s.l}</h3><span class="n">${items.length}</span></div>
+      <div class="colm-v">${val?money(val)+'/mo potential':'&nbsp;'}</div>
+      <div class="colm-b">${items.map(pcard).join('') || `<p class="tiny muted" style="padding:8px 4px">Drop leads here</p>`}</div></div>`; }).join('');
+  return `<div class="page-h"><div><h1>Pipeline</h1><p>Drag a card to move it. Key stages ask for the details that matter.</p></div><a class="btn pri" href="#/new">${ic('plus',17)} Add lead</a></div>
+  <div class="board" id="board">${cols}</div>`;
+}
+function pcard(l){
+  const c = contact(l), ed = canEdit(l);
+  return `<div class="pcard" ${ed?'draggable="true"':''} data-drag="${l.id}" data-a="open" data-id="${l.id}" tabindex="0" role="link">
+    <div class="row between"><span class="co">${esc(l.company)}</span>${prChip(l.priority)}</div>
+    <div class="muted">${esc(c.name||'No contact')}</div>
+    <div class="row between mt8">${pchip(l.partnerId)}${scoreEl(l.score)}</div>
+    ${l.next?.text?`<div class="nx">${esc(l.next.type)}: ${esc(l.next.text)}</div><div class="mt8">${dueEl(l.next.due)}</div>`:(needsNext(l)?`<div class="nx" style="color:var(--amber)">${ic('alert',12)} No next action</div>`:'')}
+    ${ed?`<select class="input mv" data-c="move" data-id="${l.id}" aria-label="Move to stage">${stageOpts(l.status)}</select>`:''}
+  </div>`;
+}
+
+/* ---------- Stage changes ---------- */
+function requestStage(id, stage){
+  const l = S.leads[id]; if(!l || l.status===stage) return;
+  if(!canEdit(l)) return toast('You can only update leads assigned to you.','err');
+  const T = today(), name = ST[stage].l, c = contact(l);
+  const forms = {
+    meeting:()=>`<label class="f req">Meeting date<input class="input" type="date" name="date" value="${addDays(T,2)}" required></label><label class="f">Meeting time<input class="input" type="time" name="time" value="10:00"></label><label class="f">Notes<input class="input" name="notes" placeholder="Video call, at their office…"></label>`,
+    proposal:()=>`<label class="f req">Proposal date<input class="input" type="date" name="date" value="${T}" required></label><label class="f">Proposal value (£/month)<input class="input" type="number" name="value" value="${esc(l.value||'')}"></label><label class="f">Chase on<input class="input" type="date" name="chase" value="${addDays(T,3)}"></label>`,
+    converted:()=>`<label class="f">Account manager<select class="input" name="am">${partnerOpts(l.accountManagerId || activeTeam().find(m=>m.role==='account_manager')?.id || '', 'None yet')}</select></label><label class="f req">Conversion date<input class="input" type="date" name="date" value="${T}" required></label><label class="f req">Final value (£/month)<input class="input" type="number" name="value" value="${esc(l.value||'')}" required></label><div><span class="small strong">Services sold</span><div class="svc mt8">${SERVICES.map(s=>`<label class="chip toggle-chip"><input type="checkbox" name="services" value="${esc(s)}" ${(l.services||[]).includes(s)?'checked':''}>${esc(s)}</label>`).join('')}</div></div>`,
+    rejected:()=>`<label class="f req">Rejection reason<select class="input" name="reason" required>${opts(REJECT_REASONS,'','Select a reason')}</select></label><label class="f">Notes (optional)<textarea class="input" name="notes" placeholder="Anything that would help if we try again later"></textarea></label>`,
+    notnow:()=>`<label class="f req">Reason<input class="input" name="reason" required placeholder="e.g. Asked us to call back after January"></label><label class="f req">Re-contact date<input class="input" type="date" name="date" value="${addDays(T,90)}" required></label><div class="quickdates">${[['1 month',30],['3 months',90],['6 months',182]].map(([l2,n])=>`<button type="button" class="btn sm" data-a="setdate" data-v="${addDays(T,n)}">${l2}</button>`).join('')}</div>`,
+  };
+  if(!forms[stage]) return applyStage(id, stage, {});
+  openSheet(`<h2>Move to ${esc(name)}</h2><p class="sub">${esc(l.company)}${c.name?', '+esc(c.name):''}</p><div class="stack">${forms[stage]()}</div>`, `Move to ${name}`, fd=>{
+    const g = k => (fd.get(k)??'').toString().trim();
+    if(stage==='rejected' && !g('reason')) return 'Choose a rejection reason.';
+    if(stage==='notnow' && (!g('reason')||!g('date'))) return 'Add a reason and a re-contact date.';
+    if(['meeting','proposal','converted'].includes(stage) && !g('date')) return 'Pick a date.';
+    if(stage==='converted' && !g('value')) return 'Add the final value.';
+    applyStage(id, stage, {am:g('am'), date:g('date'), time:g('time'), notes:g('notes'), value:g('value'), chase:g('chase'), reason:g('reason'), services:fd.getAll('services').map(String)});
+  });
+}
+function applyStage(id, stage, x){
+  const l = clone(S.leads[id]), from = ST[l.status].l, now = new Date().toISOString();
+  l.status = stage; l.stageHistory = [...(l.stageHistory||[]), {s:stage, at:now}];
+  let extra = '';
+  if(stage==='meeting'){ l.meetingDate = x.date; l.next = {type:'Meeting', text:`Discovery meeting${x.time?' at '+x.time:''}${x.notes?' ('+x.notes+')':''}`, due:x.date, reminder:'1 hour before'}; extra = ` Meeting on ${fmtD(x.date)}.`; }
+  if(stage==='proposal'){ l.proposalDate = x.date; if(x.value) l.value = +x.value; l.next = {type:'Follow-up', text:'Chase proposal feedback', due:x.chase||addDays(x.date,3), reminder:'Morning of'}; extra = ` Proposal dated ${fmtD(x.date)}.`; }
+  if(stage==='converted'){ if(x.am) l.accountManagerId = x.am; l.conversion = {date:x.date, value:+x.value, services:x.services}; l.value = +x.value; l.probability = 100; if(x.services?.length) l.services = x.services; l.next = null; extra = ` ${money(x.value)}/month.${x.am?' Account manager: '+pname(x.am)+'.':''}`; }
+  if(stage==='rejected'){ l.rejection = {reason:x.reason, notes:x.notes, date:today()}; l.next = null; extra = ` Reason: ${x.reason}.${x.notes?' '+x.notes:''}`; }
+  if(stage==='notnow'){ l.notNow = {reason:x.reason, recontact:x.date, date:today()}; l.next = {type:'Re-contact', text:`Re-contact ${contact(l).name||l.company}`, due:x.date, reminder:'Morning of'}; extra = ` ${x.reason}. Re-contact ${fmtD(x.date)}.`; }
+  if(stage==='unresponsive') l.next = null;
+  l.activities = [...(l.activities||[]), {id:uid('a'), at:now, by:actor(), type:'Status Change', text:`Moved from ${from} to ${ST[stage].l}.${extra}`}];
+  saveLead(l, `Lead moved to ${ST[stage].l}.`);
+  if(needsNext(l) && (!l.next || !l.next.due)) setTimeout(()=>toast('Set the next action for this lead.','',{a:'editnext',id:l.id,label:'Schedule'}),300);
+}
+
+/* ---------- Follow-ups ---------- */
+function followView(){
+  const L = scoped();
+  const secs = [['overdue','Overdue','over'],['today','Due today','today'],['tomorrow','Tomorrow',''],['week','This week',''],['upcoming','Upcoming',''],['none','No follow-up set','none']];
+  const by = k => L.filter(l=>bucket(l)===k).sort((a,b)=>(a.next?.due||'').localeCompare(b.next?.due||''));
+  const parked = L.filter(l=>bucket(l)==='parked').length;
+  const sec = ([k,title,cls]) => { const list = by(k); if(!list.length && !['overdue','today','none'].includes(k)) return '';
+    const msg = {overdue:'Great! You have no overdue follow-ups.',today:'Nothing due today.',none:'Every active lead has a next step.'}[k];
+    return `<section class="fsec" id="sec-${k}"><div class="fsec-h"><h2 style="${k==='overdue'&&list.length?'color:var(--red)':''}">${title}</h2><span class="n">${list.length}</span></div>
+    ${list.length ? list.map(l=>fitem(l,cls)).join('') : `<p class="small muted">${msg}</p>`}</section>`; };
+  return `<div class="page-h"><div><h1>Follow-ups</h1><p>${L.filter(l=>['overdue','today'].includes(bucket(l))).length} to handle today.${parked?` ${parked} parked "not now" lead${parked>1?'s':''} will reappear here on their re-contact date.`:''}</p></div></div>
+  ${secs.map(sec).join('')}`;
+}
+function fitem(l, cls){
+  const ed = canEdit(l), c = contact(l), noNext = bucket(l)==='none';
+  return `<div class="fitem ${cls}">
+    <div class="open" data-a="open" data-id="${l.id}" role="link" tabindex="0"><b>${esc(l.company)}</b> ${prChip(l.priority)}<div class="small muted">${esc(c.name||'')}${c.name?', ':''}${stChip(l.status)}</div></div>
+    <div class="small">${noNext ? `<span style="color:var(--amber)">${ic('alert',13)} ${esc(issues(l).join(', '))}</span>` : `<b>${esc(l.next.type)}:</b> ${esc(l.next.text)}<div>${dueEl(l.next.due)} <span class="muted">${pchip(l.partnerId)}</span></div>`}</div>
+    <div class="acts">${ed ? (noNext ? `<button class="btn sm pri" data-a="editnext" data-id="${l.id}">Schedule follow-up</button>` : `<button class="btn sm pri" data-a="complete" data-id="${l.id}">${ic('check',15)} Complete</button><button class="btn sm" data-a="resched" data-id="${l.id}">Reschedule</button>`) : ''}
+      ${isAdmin()?`<button class="btn sm" data-a="owner" data-id="${l.id}">Change owner</button>`:''}<a class="btn sm ghost" href="#/lead/${l.id}">Open</a></div>
+  </div>`;
+}
+
+/* ---------- Calendar ---------- */
+function calEvents(){
+  const ev = [];
+  scoped().forEach(l=>{
+    if(l.next?.due && needsNext(l)){ const t = l.next.type; const cls = t==='Meeting'?'meeting':t==='Proposal'?'proposal':t==='Re-contact'?'recontact':'followup';
+      ev.push({d:l.next.due, id:l.id, cls: dueClass(l.next.due)==='over'?'over':cls, label:`${t}: ${l.company}`}); }
+    if(l.meetingDate && !(l.next?.type==='Meeting' && l.next.due===l.meetingDate)) ev.push({d:l.meetingDate,id:l.id,cls:'meeting',label:`Meeting: ${l.company}`});
+    if(l.proposalDate) ev.push({d:l.proposalDate,id:l.id,cls:'proposal',label:`Proposal sent: ${l.company}`});
+  });
+  return ev;
+}
+function calView(){
+  const m = S.ui.calMonth, [y,mo] = m.split('-').map(Number), first = new Date(y,mo-1,1), startOff = (first.getDay()+6)%7;
+  const start = addDays(isoD(first), -startOff), ev = calEvents(), T = today();
+  const byDay = {}; ev.forEach(e=>(byDay[e.d] = byDay[e.d]||[]).push(e));
+  const days = [...Array(42)].map((_,i)=>addDays(start,i));
+  const cells = days.map(d=>{ const list = byDay[d]||[]; return `<div class="day ${monthOf(d)!==m?'out':''} ${d===T?'td':''}"><span class="dn">${parseD(d).getDate()}</span>${list.slice(0,4).map(e=>`<button class="ev ${e.cls}" data-a="open" data-id="${e.id}" title="${esc(e.label)}">${esc(e.label)}</button>`).join('')}${list.length>4?`<button class="ev more" data-a="calday" data-d="${d}">+${list.length-4} more</button>`:''}</div>`; }).join('');
+  const agendaDays = Object.keys(byDay).filter(d=>monthOf(d)===m).sort();
+  return `<div class="page-h"><div><h1>Calendar</h1><p>Meetings, calls, follow-ups, proposals and re-contact dates.</p></div>
+    <div class="row"><button class="btn icon" data-a="calmove" data-n="-1" aria-label="Previous month">${ic('back')}</button><b style="min-width:150px;text-align:center;font-family:var(--display);font-size:18px">${monthLabel(m)}</b><button class="btn icon" data-a="calmove" data-n="1" aria-label="Next month">${ic('fwd')}</button><button class="btn" data-a="caltoday">Today</button></div></div>
+  <div class="legend" style="margin-bottom:10px;flex-wrap:wrap"><span><i style="background:var(--violet)"></i>Meeting</span><span><i style="background:var(--accent)"></i>Call or follow-up</span><span><i style="background:var(--amber)"></i>Proposal</span><span><i style="background:var(--red)"></i>Overdue</span><span><i style="border:1px dashed var(--muted)"></i>Re-contact</span></div>
+  <div class="cal">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="dow">${d}</div>`).join('')}${cells}</div>
+  <div class="agenda">${agendaDays.length ? agendaDays.map(d=>`<div class="aday" id="day-${d}"><h3>${d===T?'Today, ':''}${fmtD(d)}</h3>${byDay[d].map(e=>`<button class="ev ${e.cls}" data-a="open" data-id="${e.id}">${esc(e.label)}</button>`).join('')}</div>`).join('') : empty('Nothing scheduled this month','','')}</div>`;
+}
+
+/* ---------- Reports ---------- */
+function reportsView(){
+  const m = S.ui.repMonth, Lall = scoped(), L = m==='all' ? Lall : Lall.filter(l=>l.month===m);
+  const T = targetFor(m==='all'?thisMonth():m);
+  const s = statsFor(L), f = funnelFor(L);
+  const ext = [['Rejected',L.filter(l=>l.status==='rejected').length],['Not now',L.filter(l=>l.status==='notnow').length],['Unresponsive',L.filter(l=>l.status==='unresponsive').length]];
+  const tbl = (head, rows) => `<div class="tbl-wrap"><table class="tbl compact"><thead><tr>${head.map((h,i)=>`<th class="${i?'num':''}">${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${head.length}" class="muted">No data for this period.</td></tr>`}</tbody></table></div>`;
+  const group = (key, list) => list.map(v=>{ const x = L.filter(l=>l[key]===v); const st = statsFor(x); return [v,x.length,st.meetings,st.proposals,st.converted]; }).filter(r=>r[1]).sort((a,b)=>b[4]-a[4]||b[1]-a[1])
+    .map(([v,n,mt,p,c])=>`<tr><td>${esc(v)}</td><td class="num">${n}</td><td class="num">${mt}</td><td class="num">${p}</td><td class="num">${c}</td><td class="num"><b>${pct(c,n)}%</b></td></tr>`);
+  const lost = {}; L.filter(l=>l.status==='rejected').forEach(l=>{ const r = l.rejection?.reason||'Not recorded'; lost[r]=(lost[r]||0)+1; });
+  const lostArr = Object.entries(lost).sort((a,b)=>b[1]-a[1]), lostMax = Math.max(1,...lostArr.map(x=>x[1]));
+  const assigned = L.filter(l=>l.partnerId).length;
+  return `<div class="page-h"><div><h1>Reports</h1><p>Prospecting and conversion performance${isAdmin()&&S.ui.pf!=='all'?' for '+esc(S.ui.pf==='none'?'unassigned leads':pname(S.ui.pf)):''}.</p></div>
+    <div class="row wrap"><select class="input" data-c="repMonth" style="width:auto" aria-label="Period">${opts([['all','All time'],...monthsAvailable().map(x=>[x,monthLabel(x)])], m)}</select>${isAdmin()?`<button class="btn" data-a="export">${ic('down',17)} Export</button>`:''}</div></div>
+  ${m!=='all'?`<section class="card" style="margin-bottom:18px"><div class="card-h"><h2>Monthly prospecting, ${monthLabel(m)}</h2>${isAdmin()?`<label class="row small">Target <input class="input" type="number" min="1" data-c="target" value="${T}" style="width:84px"></label>`:`<span class="small muted">Target ${T}</span>`}</div>
+    <div class="row between small"><span><b>${s.leads}</b> of ${T} prospects identified</span><span class="muted">${pct(s.leads,T)}%</span></div>
+    <div class="progress mt8"><b style="width:${Math.min(100,pct(s.leads,T))}%"></b></div>
+    <div class="target">${[['Identified',s.leads],['Assigned',assigned],['Contacted',s.contacted],['Meetings',s.meetings],['Qualified',s.qualified],['Proposals',s.proposals],['Converted',s.converted]].map(([a,b])=>`<div><b>${b}</b><span>${a}</span></div>`).join('')}</div>
+    <p class="small muted mt12">Identify, assign, contact, follow up, convert. Converted value this month: <b style="color:var(--ink)">${money(s.value)}/month</b>.</p></section>`:''}
+  <div class="rgrid">
+    <section class="card"><div class="card-h"><h2>Funnel</h2></div>${funnelEl(f)}
+      <dl class="kv mt16">${[['Contact rate',s.contacted],['Meeting rate',s.meetings],['Qualification rate',s.qualified],['Proposal rate',s.proposals],['Conversion rate',s.converted]].map(([a,b])=>`<dt>${a}</dt><dd><b>${pct(b,s.leads)}%</b></dd>`).join('')}
+      ${ext.map(([a,b])=>`<dt>${a}</dt><dd>${b} (${pct(b,s.leads)}%)</dd>`).join('')}</dl></section>
+    <section class="card"><div class="card-h"><h2>Lost reasons</h2><span class="tiny muted">${ext[0][1]} rejected</span></div>
+      ${lostArr.length?lostArr.map(([r,n])=>`<div class="hbar"><span>${esc(r)}</span><div class="t"><b style="width:${n/lostMax*100}%"></b></div><span class="num">${n}</span></div>`).join(''):`<p class="small muted">No rejected leads in this period.</p>`}</section>
+  </div>
+  <section class="card mt24"><div class="card-h"><h2>Team performance</h2></div>
+    ${tbl(['Owner','Leads','Contacted','Meetings','Proposals','Converted','Conversion rate','Overdue follow-ups'], team().filter(p=>p.active!==false || L.some(l=>l.partnerId===p.id)).map(p=>{ const x = L.filter(l=>l.partnerId===p.id), st = statsFor(x); return `<tr><td>${pchip(p.id)}<div class="tiny muted">${esc(roleName(p.role))}</div></td><td class="num">${st.leads}</td><td class="num">${st.contacted}</td><td class="num">${st.meetings}</td><td class="num">${st.proposals}</td><td class="num">${st.converted}</td><td class="num"><b>${pct(st.converted,st.leads)}%</b></td><td class="num" style="${st.overdue?'color:var(--red);font-weight:600':''}">${st.overdue}</td></tr>`; }))}</section>
+  <div class="rgrid mt24">
+    <section class="card"><div class="card-h"><h2>Lead source performance</h2></div>${tbl(['Source','Leads','Meetings','Proposals','Converted','Rate'], group('source', S.settings.sources))}</section>
+    <section class="card"><div class="card-h"><h2>Industry performance</h2></div>${tbl(['Industry','Leads','Meetings','Proposals','Converted','Rate'], group('industry', INDUSTRIES))}</section>
+  </div>`;
+}
+
+/* ---------- Team ---------- */
+function memberCard(p, all){
+  const x = all.filter(l=>l.partnerId===p.id), s = statsFor(x);
+  const clients = all.filter(l=>l.accountManagerId===p.id && l.status==='converted'), cv = clients.reduce((a,l)=>a+(+l.conversion?.value||+l.value||0),0);
+  const contactLine = [p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:'', p.phone?`<a href="tel:${esc(p.phone.replace(/\s/g,''))}">${esc(p.phone)}</a>`:''].filter(Boolean).join(', ');
+  const isAM = p.role==='account_manager';
+  const stats = isAM ? [['Clients managed',clients.length],['Client value / month',money(cv)],['Leads owned',s.leads],['Overdue',s.overdue]]
+    : [['Leads owned',s.leads],['Active',s.active],['Overdue',s.overdue],['Meetings',s.meetings],['Proposals',s.proposals],['Converted',s.converted]];
+  return `<section class="card"><div class="row between" style="align-items:flex-start"><div class="row">${glyph(p.id,30)}<div><h2>${esc(p.name)}</h2><span class="small muted">${esc(p.title||roleName(p.role))}</span></div></div>
+    ${isAdmin()?`<button class="btn sm" data-a="editmember" data-id="${p.id}">${ic('edit',15)} Edit</button>`:''}</div>
+    ${contactLine?`<p class="small mt8">${contactLine}</p>`:''}
+    <div class="pstats">${stats.map(([a,b])=>`<div><b style="${a==='Overdue'&&b?'color:var(--red)':''}">${b}</b><span>${a}</span></div>`).join('')}</div>
+    ${!isAM && clients.length?`<p class="small">Account manager for <b>${clients.length}</b> client${clients.length>1?'s':''}.</p>`:''}
+    ${!isAM?`<div class="row between small mt8"><span>Conversion rate</span><b>${pct(s.converted,s.leads)}%</b></div><div class="progress mt8"><b style="width:${pct(s.converted,s.leads)}%;background:${mcolor(p.id)}"></b></div>`:''}
+    <div class="row wrap mt16">${isAdmin()?`<button class="btn sm" data-a="filterpartner" data-id="${p.id}">Show only ${esc(p.name.split(' ')[0])}</button>`:''}<button class="btn sm ghost" data-a="${isAM?'amleads':'partnerleads'}" data-id="${p.id}">${isAM?'View clients':'View leads'}</button></div></section>`;
+}
+function partnersView(){
+  const all = allLeads(), act = activeTeam(), off = team().filter(m=>m.active===false);
+  const plural = {partner:'Partners',sales:'Sales',account_manager:'Account managers',other:'Other'};
+  const groups = ROLES.map(([k])=>[k, plural[k], act.filter(m=>m.role===k)]).filter(g=>g[2].length);
+  return `<div class="page-h"><div><h1>Team</h1><p>${act.length} active team member${act.length===1?'':'s'}. Anyone on the team can own leads.</p></div>
+    ${isAdmin()?`<button class="btn pri" data-a="addmember">${ic('plus',17)} Add team member</button>`:''}</div>
+  ${groups.map(([k,l,list])=>`<div class="rolegroup"><h2>${esc(l)}</h2><div class="pcards">${list.map(p=>memberCard(p,all)).join('')}</div></div>`).join('') || empty('No team members yet','Add the people who will work leads.', isAdmin()?`<button class="btn pri" data-a="addmember">Add team member</button>`:'')}
+  ${off.length&&isAdmin()?`<section class="card mt24"><div class="card-h"><h2>Inactive</h2><span class="small muted">Kept for history. They can't be assigned new leads.</span></div>${off.map(m=>`<div class="tm off">${glyph(m.id,22)}<div><b>${esc(m.name)}</b><div class="small muted">${esc(m.title||roleName(m.role))}</div></div><div class="row"><button class="btn sm" data-a="editmember" data-id="${m.id}">Edit</button><button class="btn sm" data-a="reactivate" data-id="${m.id}">Reactivate</button></div></div>`).join('')}</section>`:''}
+  ${isAdmin()?`<section class="card mt24"><div class="card-h"><h2>Unassigned</h2><span class="small muted">${all.filter(l=>!l.partnerId&&isActive(l)).length} active leads need an owner</span></div>
+    ${all.filter(l=>!l.partnerId&&isActive(l)).map(l=>`<div class="fitem none"><div class="open" data-a="open" data-id="${l.id}"><b>${esc(l.company)}</b><div class="small muted">${esc(l.industry||'')}, added ${fmtShort(l.addedAt)}</div></div><div></div><div class="acts"><button class="btn sm pri" data-a="owner" data-id="${l.id}">Assign owner</button></div></div>`).join('') || '<p class="small muted">Every lead has an owner.</p>'}</section>`:''}`;
+}
+function memberSheet(id){
+  const m = id ? partner(id) : {name:'',role:'sales',title:'',email:'',phone:'',active:true,color:team().length%8,shape:team().length%3};
+  const n = id ? leadCount(id) : 0;
+  const shapes = [0,1,2].map(i=>`<label title="${['Circle','Square','Triangle'][i]}"><input type="radio" name="shape" value="${i}" ${(+m.shape)===i?'checked':''}><svg width="18" height="18" viewBox="0 0 16 16">${[`<circle cx="8" cy="8" r="7" fill="var(--ink-2)"/>`,`<rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="var(--ink-2)"/>`,`<path d="M8 1 L15 14.5 H1 Z" fill="var(--ink-2)"/>`][i]}</svg></label>`).join('');
+  const colors = [...Array(8)].map((_,i)=>`<label title="Colour ${i+1}"><input type="radio" name="color" value="${i}" ${(+m.color)===i?'checked':''}><span style="width:18px;height:18px;border-radius:50%;background:var(--c${i});display:block"></span></label>`).join('');
+  openSheet(`<h2>${id?'Edit '+esc(m.name):'Add team member'}</h2><p class="sub">${id?`${n} lead${n===1?'':'s'} linked to this person.${m.active===false?' Currently inactive.':''}`:'They can be assigned leads straight away. To give them a login, add the same email in Supabase (see the setup guide) and they are linked automatically.'}</p>
+    <div class="stack">
+      <div class="grid2"><label class="f req">Full name<input class="input" name="name" value="${esc(m.name)}" autocomplete="off" required></label>
+      <label class="f">Role<select class="input" name="role">${opts(ROLES, m.role)}</select></label></div>
+      <label class="f">Job title<input class="input" name="title" value="${esc(m.title)}" placeholder="e.g. Business Development Manager"></label>
+      <div class="grid2"><label class="f">Email<input class="input" type="email" name="email" value="${esc(m.email)}"></label>
+      <label class="f">Phone<input class="input" type="tel" name="phone" value="${esc(m.phone)}"></label></div>
+      <div><span class="small strong" style="color:var(--ink-2)">Marker</span><div class="row wrap mt8" style="gap:14px"><div class="swatches">${shapes}</div><div class="swatches">${colors}</div></div></div>
+      ${id?`<div class="row wrap mt8" style="border-top:1px solid var(--line);padding-top:14px">${m.active!==false?`<button type="button" class="btn danger" data-a="deactivate" data-id="${id}">Deactivate</button>`:''}${n===0?`<button type="button" class="btn danger" data-a="removemember" data-id="${id}">${ic('trash',15)} Delete</button>`:`<span class="small muted">People with leads can be deactivated, not deleted, so history stays intact.</span>`}</div>`:''}
+    </div>`, id?'Save changes':'Add team member', fd=>{
+    const g = k => (fd.get(k)??'').toString().trim();
+    if(!g('name')) return 'Enter a name.';
+    if(team().some(x=>x.id!==id && x.name.toLowerCase()===g('name').toLowerCase())) return 'Someone on the team already has that name.';
+    if(g('email') && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(g('email'))) return 'Check the email address.';
+    const data = {name:g('name'), role:g('role')||'other', title:g('title'), email:g('email'), phone:g('phone'), color:+g('color')||0, shape:+g('shape')||0};
+    const list = team();
+    if(id){ S.settings.partners = list.map(x=>x.id===id?{...x,...data}:x); saveSettings(`${data.name} updated.`); }
+    else { S.settings.partners = [...list, {id:uid('m'), active:true, joined:today(), ...data}]; saveSettings(`${data.name} added to the team.`); }
+  });
+}
+function deactivateSheet(id){
+  const m = partner(id), open = allLeads().filter(l=>isActive(l) && (l.partnerId===id || l.backupPartnerId===id || l.accountManagerId===id));
+  openSheet(`<h2>Deactivate ${esc(m.name)}?</h2><p class="sub">They stay on past activity and reports but can't be assigned new leads or pick their name to sign in.</p>
+    ${open.length?`<label class="f">Reassign their ${open.length} open lead${open.length>1?'s':''} to<select class="input" name="to">${opts([['','Leave unassigned'],...teamOpts().filter(o=>o[0]!==id)], '')}</select></label>`:'<p class="small">They have no open leads.</p>'}`, 'Deactivate', fd=>{
+    const to = String(fd.get('to')||'');
+    S.settings.partners = team().map(x=>x.id===id?{...x,active:false}:x);
+    if(S.ui.pf===id) S.ui.pf='all';
+    saveSettings(`${m.name} deactivated.`);
+    const now = new Date().toISOString(), changed = open.map(l=>{ const x = clone(l);
+      if(x.partnerId===id){ x.partnerId = to||null; x.activities = [...(x.activities||[]), {id:uid('a'),at:now,by:actor(),type:'Other',text:`Reassigned from ${m.name} to ${to?pname(to):'nobody'} (team change).`}]; }
+      if(x.backupPartnerId===id) x.backupPartnerId = null;
+      if(x.accountManagerId===id) x.accountManagerId = to||null;
+      x.updatedAt = now; return x; });
+    if(changed.length) bulkWrite(changed).then(r=>{ render(); toast(`${r.ok} open lead${r.ok===1?'':'s'} updated${to?', now with '+pname(to):''}.`); });
+    if(S.mode==='db') Object.entries(S.members).filter(([,v])=>v.partnerId===id).forEach(([u])=>DB.updateProfile(u,{member_id:null}).catch(()=>{}));
+  });
+}
+
+/* ---------- Settings ---------- */
+function settingsView(){
+  const adm = isAdmin();
+  const memberRows = Object.entries(S.members);
+  return `<div class="page-h"><div><h1>Settings</h1><p>${S.mode==='db'?'Shared workspace. Changes sync to the whole team.':'Demo mode: saved in this browser only. Connect Supabase to share with your team.'}</p></div></div>
+  <div class="rgrid">
+    <section class="card"><div class="card-h"><h2>You</h2></div>
+      ${S.mode==='local' ? `<div class="grid2"><label class="f">Role<select class="input" data-c="localrole">${opts([['admin','Admin'],['partner','Team member']], S.localRole.role)}</select></label><label class="f">You are<select class="input" data-c="localseat">${partnerOpts(S.localRole.partnerId,'None')}</select></label></div><p class="small muted mt12">Switch roles to try what team members can and can't do.</p>`
+       : `<p class="small">Access: <b>${me().role==='admin'?'Admin':'Team member'}</b>. Signed in as ${esc(S.email)}. ${me().role==='admin'?'Admins can give other people admin access below.':'Ask an admin if you need admin rights.'}</p>
+          <label class="f mt12">You are<select class="input" data-c="myseat">${partnerOpts(me().partnerId,'None (admin only)')}</select></label>
+          ${me().role==='admin'?`<div class="row wrap mt12"><span class="small muted">Preview as:</span>${activeTeam().map(p=>`<button class="btn sm" data-a="preview" data-id="${p.id}">${esc(p.name)}</button>`).join('')}</div>`:''}`}
+      ${S.mode==='db'?`<div class="row wrap mt12"><button class="btn sm" data-a="changepw">Change password</button><button class="btn sm" data-a="signout">Sign out</button></div>`:''}
+      <label class="f mt16">Theme<select class="input" data-c="theme">${opts([['','Match system'],['light','Light'],['dark','Dark']], document.documentElement.dataset.theme||'')}</select></label>
+    </section>
+    <section class="card"><div class="card-h"><h2>Team</h2>${adm?`<button class="btn sm pri" data-a="addmember">${ic('plus',15)} Add</button>`:''}</div>
+      <div>${team().map(p=>`<div class="tm ${p.active===false?'off':''}">${glyph(p.id,22)}<div style="min-width:0"><b>${esc(p.name)}</b><div class="small muted">${esc(roleName(p.role))}${p.title?', '+esc(p.title):''}${p.active===false?', inactive':''}</div></div>${adm?`<button class="btn sm" data-a="editmember" data-id="${p.id}">${ic('edit',15)} Edit</button>`:''}</div>`).join('')}</div>
+      ${S.mode==='db'&&adm?`<h3 class="mt16">Logins</h3><p class="small muted mt8">People with a login (added in Supabase). Link each login to a team member and choose who is an admin.</p><div class="small mt8" id="memberList">${memberRows.map(([u,m])=>`<div class="tm"><span>${u===S.uid?'👤':''}</span><div style="min-width:0"><b style="overflow-wrap:anywhere">${esc(m.email||'Unknown')}</b>${u===S.uid?' <span class="muted">(you)</span>':''}<div class="row wrap mt8"><select class="input" style="width:auto;min-height:32px;font-size:13px" data-c="setseat" data-u="${esc(u)}" aria-label="Team member for ${esc(m.email)}">${partnerOpts(m.partnerId,'Not linked')}</select><label class="row small"><input type="checkbox" data-c="setadmin" data-u="${esc(u)}" ${m.isAdmin?'checked':''} ${u===S.uid?'disabled':''}> Admin</label></div></div><span></span></div>`).join('')}</div>`:''}
+    </section>
+    <section class="card"><div class="card-h"><h2>Lead sources</h2></div>
+      <div class="svc">${S.settings.sources.map(s=>`<span class="chip">${esc(s)}${adm&&!DEFAULT_SOURCES.includes(s)?` <button class="btn ghost sm icon" style="min-height:18px;width:18px" data-a="rmsource" data-v="${esc(s)}" aria-label="Remove ${esc(s)}">${ic('x',12)}</button>`:''}</span>`).join('')}</div>
+      ${adm?`<div class="row mt12"><input class="input" id="newsource" placeholder="New source, e.g. Podcast"><button class="btn" data-a="addsource">Add</button></div>`:''}
+    </section>
+    <section class="card"><div class="card-h"><h2>Monthly target</h2></div>
+      <label class="f">Default prospects per month<input class="input" type="number" min="1" data-c="deftarget" value="${esc(S.settings.defaultTarget)}" ${adm?'':'disabled'}></label>
+      <p class="small muted mt8">Override individual months on the Reports page.</p>
+    </section>
+    <section class="card"><div class="card-h"><h2>Data</h2></div>
+      <div class="row wrap"><button class="btn" data-a="export">${ic('down',16)} Export CSV</button><a class="btn" href="#/import">${ic('up',16)} Import CSV</a>
+      ${adm?`<button class="btn" data-a="loaddemo">${ic('spark',16)} Load demo data</button><button class="btn danger" data-a="clearall">${ic('trash',16)} Delete all leads</button>`:''}</div>
+      <p class="small muted mt12">${allLeads().length} leads stored.</p>
+    </section>
+    <section class="card"><div class="card-h"><h2>AI assistant</h2><span class="chip ${S.cap.sample?'green':''}">${S.cap.sample?'On':'Off'}</span></div>
+      <p class="small">On each lead page: summarise, suggest the next action, score the lead, draft outreach and research the company. The CRM works fully without it. To switch it on, follow the optional AI step in the setup guide. Requests are only sent when someone clicks.</p>
+    </section>
+  </div>`;
+}
+
+/* ---------- CSV ---------- */
+function parseCSV(text){
+  const rows = []; let row = [], cur = '', q = false;
+  for(let i=0;i<text.length;i++){ const ch = text[i];
+    if(q){ if(ch==='"'){ if(text[i+1]==='"'){ cur+='"'; i++; } else q = false; } else cur += ch; }
+    else if(ch==='"') q = true; else if(ch===','){ row.push(cur); cur=''; } else if(ch==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; } else if(ch!=='\r') cur += ch; }
+  if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
+  return rows.filter(r=>r.some(c=>c.trim()!==''));
+}
+const csvCell = v => { const s = String(v??''); return /[",\n\r]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; };
+const IMPORT_COLS = ['Company Name','Website','Industry','Location','Contact Name','Job Title','Phone','WhatsApp','Email','LinkedIn','Lead Source','Notes'];
+function importView(){
+  const st = S.importState;
+  if(st?.result){ const r = st.result; return `<div class="page-h"><div><h1>Import complete</h1></div></div>
+    <section class="card" style="max-width:720px"><div class="target" style="grid-template-columns:repeat(4,minmax(0,1fr))">${[['Imported',r.imported],['Skipped',r.skipped],['Duplicates',r.duplicates],['Errors',r.errors]].map(([a,b])=>`<div><b>${b}</b><span>${a}</span></div>`).join('')}</div>
+    <div class="row mt16"><a class="btn pri" href="#/leads" data-a="resetimport">View leads</a><button class="btn" data-a="resetimport">Import another file</button></div></section>`; }
+  if(st?.rows){
+    const ok = st.rows.filter(r=>r.state==='ok').length, dup = st.rows.filter(r=>r.state==='duplicate').length, bad = st.rows.filter(r=>r.state==='error').length;
+    return `<div class="page-h"><div><h1>Import preview</h1><p>${st.rows.length} rows found. ${ok} ready, ${dup} possible duplicates, ${bad} with errors.</p></div>
+      <div class="row wrap"><button class="btn" data-a="resetimport">Choose a different file</button><button class="btn pri" data-a="doimport" ${ok||st.includeDups?'':'disabled'}>${ic('check',16)} Import ${ok + (st.includeDups?dup:0)} leads</button></div></div>
+    <section class="card" style="margin-bottom:14px"><div class="grid3">
+      <label class="f">Assign imported leads to<select class="input" data-c="impPartner">${isAdmin()?partnerOpts(st.partnerId):opts([[myPid(),pname(myPid())]],myPid())}</select></label>
+      <label class="f">Prospecting month<input class="input" type="month" data-c="impMonth" value="${esc(st.month)}"></label>
+      <label class="f">Possible duplicates<select class="input" data-c="impDups">${opts([['skip','Skip duplicates'],['include','Import anyway']], st.includeDups?'include':'skip')}</select></label>
+    </div></section>
+    <div class="tbl-wrap"><table class="tbl compact"><thead><tr><th>Row</th><th>Result</th><th>Company</th><th>Contact</th><th>Email</th><th>Phone</th><th>Source</th></tr></thead><tbody>
+    ${st.rows.map(r=>`<tr><td class="muted">${r.n}</td><td>${r.state==='ok'?'<span class="chip green">Ready</span>':r.state==='duplicate'?`<span class="chip amber" title="${esc(r.msg)}">Duplicate</span>`:`<span class="chip red">${esc(r.msg)}</span>`}</td><td><b>${esc(r.d.company)}</b></td><td>${esc(r.d.contact)}</td><td>${esc(r.d.email)}</td><td>${esc(r.d.phone)}</td><td>${esc(r.d.source)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  }
+  return `<a href="#/leads" class="btn ghost sm" style="margin:-6px 0 8px -8px">${ic('back',16)} Leads</a>
+  <div class="page-h"><div><h1>Import leads from CSV</h1><p>You'll see a preview with duplicates and missing fields before anything is saved.</p></div></div>
+  <section class="card" style="max-width:780px">
+    <label class="f">Choose a CSV file<input class="input" type="file" accept=".csv,text/csv" id="csvfile"></label>
+    <p class="small muted mt16">Or paste CSV text</p><textarea class="input mt8" id="csvtext" placeholder="${esc(IMPORT_COLS.join(','))}"></textarea>
+    <div class="row mt12"><button class="btn pri" data-a="parsepaste">Preview import</button></div>
+    <h3 class="mt24">Expected columns</h3><p class="small muted mt8">${IMPORT_COLS.map(esc).join(', ')}. Only Company Name is required. Column order doesn't matter.</p>
+  </section>`;
+}
+function prepareImport(text){
+  const rows = parseCSV(text.replace(/^\uFEFF/,''));
+  if(rows.length<2) return toast('That file has no data rows.','err');
+  const head = rows[0].map(h=>h.trim().toLowerCase());
+  const idx = name => head.indexOf(name.toLowerCase());
+  if(idx('Company Name')<0) return toast('Missing the "Company Name" column.','err');
+  const seen = [];
+  const out = rows.slice(1).map((r,i)=>{ const g = c => (idx(c)>=0 ? (r[idx(c)]||'') : '').trim();
+    const d = {company:g('Company Name'),website:g('Website'),industry:g('Industry'),location:g('Location'),contact:g('Contact Name'),title:g('Job Title'),phone:g('Phone'),whatsapp:g('WhatsApp'),email:g('Email'),linkedin:g('LinkedIn'),source:g('Lead Source'),notes:g('Notes')};
+    let state='ok', msg='';
+    if(!d.company){ state='error'; msg='Missing company name'; }
+    else if(d.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)){ state='error'; msg='Invalid email'; }
+    else { const probe = {company:d.company,website:d.website,contacts:[{email:d.email,phone:d.phone,whatsapp:d.whatsapp}]};
+      const dups = findDuplicates(probe); const inFile = seen.find(x=>normCo(x)===normCo(d.company));
+      if(dups.length){ state='duplicate'; msg = 'Matches '+dups[0].l.company; } else if(inFile){ state='duplicate'; msg='Repeated in this file'; } }
+    seen.push(d.company);
+    return {n:i+2, d, state, msg}; });
+  S.importState = {rows:out, partnerId: isAdmin() ? '' : myPid(), month:thisMonth(), includeDups:false};
+  render();
+}
+async function runImport(){
+  const st = S.importState, now = new Date().toISOString();
+  const take = st.rows.filter(r=>r.state==='ok' || (st.includeDups && r.state==='duplicate'));
+  const sources = S.settings.sources;
+  const list = take.map((r,i)=>{ const d = r.d; const ind = INDUSTRIES.find(x=>x.toLowerCase()===d.industry.toLowerCase()) || (d.industry?'Other':'');
+    return { id:'L'+Date.now().toString(36).toUpperCase()+i, company:d.company, website:d.website, industry:ind, location:d.location, size:'', socials:{linkedin:'',instagram:'',facebook:'',other:''},
+      contacts:[{id:uid('c'),name:d.contact,title:d.title,email:d.email,phone:d.phone,whatsapp:d.whatsapp,linkedin:d.linkedin}],
+      addedAt:today(), month:st.month||thisMonth(), source: sources.find(s=>s.toLowerCase()===d.source.toLowerCase()) || (d.source?'Other':''), createdBy:'import',
+      partnerId: st.partnerId||null, backupPartnerId:null, priority:'warm', score:50, services:[], value:'', probability:10, expectedClose:'', status:'new',
+      next:{type:'Research',text:'Research and make first contact',due:addDays(today(),2),reminder:'Morning of'}, lastContacted:'',
+      activities:[{id:uid('a'),at:now,by:actor(),type:'Note',text:`Imported from CSV${d.industry&&!INDUSTRIES.includes(ind)?' (industry: '+d.industry+')':''}.`}],
+      notes: d.notes ? [{id:uid('n'),at:now,by:actor(),kind:'internal',text:d.notes}] : [], stageHistory:[{s:'new',at:now}], updatedAt:now }; });
+  toast(`Importing ${list.length} lead${list.length===1?'':'s'}…`);
+  const res = await bulkWrite(list);
+  st.result = { imported:res.ok, skipped: st.rows.length - take.length, duplicates: st.rows.filter(r=>r.state==='duplicate').length, errors: st.rows.filter(r=>r.state==='error').length + res.failed };
+  S.importState = {result:st.result}; render();
+  toast(`${res.ok} lead${res.ok===1?'':'s'} imported.`);
+}
+function exportSheet(){
+  const fl = filteredLeads().length, months = monthsAvailable();
+  openSheet(`<h2>Export leads</h2><p class="sub">Download a CSV you can open in Excel or Google Sheets.</p>
+    <div class="stack">
+      <label class="row"><input type="radio" name="scope" value="all" checked> All leads you can see (${scoped().length})</label>
+      <label class="row"><input type="radio" name="scope" value="filtered"> Filtered leads from the Leads page (${fl})</label>
+      <label class="row"><input type="radio" name="scope" value="month"> Monthly leads <select class="input" name="month" style="width:auto;margin-left:auto">${opts(months.map(m=>[m,monthLabel(m)]), thisMonth())}</select></label>
+      <label class="row"><input type="radio" name="scope" value="partner"> Team member leads <select class="input" name="partner" style="width:auto;margin-left:auto">${opts(team().map(p=>[p.id,p.name]), myPid()||activeTeam()[0]?.id)}</select></label>
+    </div>`, 'Download CSV', fd=>{
+      const sc = fd.get('scope'); let L = sc==='filtered' ? filteredLeads() : scoped();
+      if(sc==='month') L = L.filter(l=>l.month===fd.get('month'));
+      if(sc==='partner') L = allLeads().filter(l=>l.partnerId===fd.get('partner') && (isAdmin()||canEdit(l)));
+      if(!L.length) return 'No leads match that choice.';
+      const name = sc==='month' ? `rps-leads-${fd.get('month')}.csv` : sc==='partner' ? `rps-leads-${pname(fd.get('partner')).toLowerCase().replace(/\W+/g,'-')}.csv` : `rps-leads-${sc}-${today()}.csv`;
+      downloadCSV(name, L);
+    });
+}
+async function downloadCSV(filename, L){
+  const head = ['Company Name','Website','Industry','Location','Company Size','Contact Name','Job Title','Email','Phone','WhatsApp','LinkedIn','Lead Source','Assigned To','Account Manager','Status','Priority','Lead Score','Potential Services','Est. Monthly Value (GBP)','Probability (%)','Next Action Type','Next Action','Due Date','Last Contacted','Date Added','Month','Rejection Reason','Re-contact Date','Latest Note'];
+  const rows = L.map(l=>{ const c = contact(l); const note = [...(l.notes||[])].sort((a,b)=>b.at.localeCompare(a.at))[0]?.text||'';
+    return [l.company,l.website,l.industry,l.location,l.size,c.name,c.title,c.email,c.phone,c.whatsapp,c.linkedin,l.source,pname(l.partnerId),l.accountManagerId?pname(l.accountManagerId):'',ST[l.status]?.l,l.priority,l.score,(l.services||[]).join('; '),l.value,l.probability,l.next?.type,l.next?.text,l.next?.due,l.lastContacted,l.addedAt,l.month,l.rejection?.reason,l.notNow?.recontact,note]; });
+  const csv = '\uFEFF' + [head,...rows].map(r=>r.map(csvCell).join(',')).join('\r\n');
+  const dl = S.cap.downloads;
+  if(dl){ try{ await dl.save({filename, data:csv}); toast(`Exported ${L.length} leads.`); } catch(e){ if(e?.code!=='declined') toast("Couldn't export the file. Try again.",'err'); } return; }
+  try{ const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = filename; document.body.appendChild(a); a.click(); a.remove(); toast(`Exported ${L.length} leads.`); }
+  catch(e){ toast('Downloads are not available in this view.','err'); }
+}
+
+/* ---------- Sheets (small focused dialogs) ---------- */
+function openSheet(inner, submitLabel, onSubmit){
+  S.sheet = {onSubmit};
+  $('#sheet').innerHTML = `<div class="scrim" data-a="closesheet-bg"><form class="sheet" role="dialog" aria-modal="true" novalidate id="sheetForm">${inner}<p class="small" id="sheetErr" style="color:var(--red);margin-top:10px"></p><div class="acts"><button type="button" class="btn" data-a="closesheet">Cancel</button>${submitLabel?`<button type="submit" class="btn pri">${esc(submitLabel)}</button>`:''}</div></form></div>`;
+  setTimeout(()=>$('#sheetForm input:not([type=radio]):not([type=checkbox]),#sheetForm select,#sheetForm textarea')?.focus(),20);
+}
+function closeSheet(){ S.sheet = null; $('#sheet').innerHTML = ''; if(S.pending) render(); }
+function completeSheet(id){
+  const l = S.leads[id], n = l.next||{}, mapT = {'Follow-up':'Call','Research':'Note','Re-contact':'Call'};
+  const typ = mapT[n.type] || (ACT_TYPES.includes(n.type)?n.type:'Other');
+  openSheet(`<h2>Complete action</h2><p class="sub">${esc(l.company)}: ${esc(n.text||'')}</p><div class="stack">
+    <div class="grid2"><label class="f">Logged as<select class="input" name="atype">${opts(ACT_TYPES.filter(t=>t!=='Status Change'),typ)}</select></label><label class="f">Move to stage<select class="input" name="stage">${stageOpts(l.status)}</select></label></div>
+    <label class="f req">What happened?<textarea class="input" name="outcome" placeholder="e.g. Spoke with ${esc((contact(l).name||'them').split(' ')[0])}. Interested in content production, wants pricing."></textarea></label>
+    <h3 class="mt8">Next action</h3>
+    <div class="grid2"><label class="f">Type<select class="input" name="ntype">${opts(NEXT_TYPES,'Follow-up')}</select></label><label class="f">Due<input class="input" type="date" name="ndue" value="${addDays(today(),3)}"></label></div>
+    <div class="quickdates">${[['Tomorrow',1],['In 3 days',3],['Next week',7],['In 2 weeks',14]].map(([a,b])=>`<button type="button" class="btn sm" data-a="setdate" data-f="ndue" data-v="${addDays(today(),b)}">${a}</button>`).join('')}</div>
+    <label class="f">Description<input class="input" name="ntext" placeholder="e.g. Send pricing and two case studies"></label>
+  </div>`, 'Complete action', fd=>{
+    const g = k => (fd.get(k)??'').toString().trim(), stage = g('stage');
+    if(!g('outcome')) return 'Write a short note about what happened.';
+    const closing = CLOSED.includes(stage) || ['rejected','notnow','converted','meeting','proposal'].includes(stage) && stage!==l.status;
+    if(!closing && (!g('ntext') || !g('ndue'))) return 'Set the next action and due date so this lead keeps moving.';
+    const x = clone(S.leads[id]), now = new Date().toISOString();
+    x.activities = [...(x.activities||[]), {id:uid('a'), at:now, by:actor(), type:g('atype'), text:g('outcome')}];
+    if(CONTACT_TYPES.includes(g('atype'))) x.lastContacted = today();
+    if(g('ntext') && g('ndue')) x.next = {type:g('ntype'), text:g('ntext'), due:g('ndue'), reminder:n.reminder||'Morning of'};
+    if(stage===x.status || !stage){ saveLead(x, x.next?.due ? `Action completed. Next: ${x.next.type.toLowerCase()} on ${fmtLong(x.next.due)}.` : 'Action completed.'); return; }
+    closeSheet(); saveLead(x); requestStage(id, stage); return 'keep';
+  });
+}
+function reschedSheet(id){
+  const l = S.leads[id], cur = l.next?.due || today();
+  const nm = (()=>{ const d = parseD(today()); const k = (8-d.getDay())%7||7; return addDays(today(),k); })();
+  openSheet(`<h2>Reschedule</h2><p class="sub">${esc(l.company)}: ${esc(l.next?.text||'')}. Currently ${fmtD(cur)}.</p><div class="stack">
+    <div class="quickdates">${[['Tomorrow',addDays(today(),1)],['In 2 days',addDays(today(),2)],['Next Monday',nm],['In 1 week',addDays(today(),7)],['In 2 weeks',addDays(today(),14)]].map(([a,b])=>`<button type="button" class="btn sm" data-a="setdate" data-f="due" data-v="${b}">${a}</button>`).join('')}</div>
+    <label class="f req">New due date<input class="input" type="date" name="due" value="${addDays(today(),1)}"></label>
+    <label class="f">Reason (optional)<input class="input" name="why" placeholder="e.g. Prospect on holiday until Monday"></label></div>`, 'Reschedule', fd=>{
+    const due = String(fd.get('due')||''); if(!due) return 'Pick a date.';
+    const x = clone(l); x.next = {...(x.next||{type:'Follow-up',text:'Follow up'}), due};
+    const why = String(fd.get('why')||'').trim();
+    x.activities = [...(x.activities||[]), {id:uid('a'), at:new Date().toISOString(), by:actor(), type:'Other', text:`Rescheduled ${x.next.type.toLowerCase()} from ${fmtD(cur)} to ${fmtD(due)}.${why?' '+why:''}`}];
+    saveLead(x, `Follow-up rescheduled to ${fmtLong(due)}.`);
+  });
+}
+function nextSheet(id){
+  const l = S.leads[id], n = l.next || {type:'Call',text:'',due:addDays(today(),1),reminder:'Morning of'};
+  openSheet(`<h2>${l.next?'Edit next action':'Schedule follow-up'}</h2><p class="sub">${esc(l.company)}</p><div class="stack">
+    <div class="grid2"><label class="f">Action type<select class="input" name="type">${opts(NEXT_TYPES,n.type)}</select></label><label class="f">Reminder<select class="input" name="reminder">${opts(REMINDERS,n.reminder||'Morning of')}</select></label></div>
+    <label class="f req">Description<input class="input" name="text" value="${esc(n.text)}" placeholder="e.g. Call ${esc((contact(l).name||'them').split(' ')[0])} to discuss proposal"></label>
+    <label class="f req">Due date<input class="input" type="date" name="due" value="${esc(n.due||addDays(today(),1))}"></label>
+    <div class="quickdates">${[['Today',0],['Tomorrow',1],['In 3 days',3],['Next week',7]].map(([a,b])=>`<button type="button" class="btn sm" data-a="setdate" data-f="due" data-v="${addDays(today(),b)}">${a}</button>`).join('')}</div>
+    ${isAdmin()&&!l.partnerId?`<label class="f req">Assign to<select class="input" name="partner">${partnerOpts('', 'Choose a team member')}</select></label>`:''}
+  </div>`, 'Save next action', fd=>{
+    const g = k => (fd.get(k)??'').toString().trim();
+    if(!g('text') || !g('due')) return 'Add a description and a due date.';
+    const x = clone(l); x.next = {type:g('type'), text:g('text'), due:g('due'), reminder:g('reminder')};
+    if(g('partner')) x.partnerId = g('partner');
+    saveLead(x, `Follow-up scheduled for ${fmtLong(g('due'))}.`);
+  });
+}
+function ownerSheet(id){
+  const l = S.leads[id];
+  openSheet(`<h2>Assign owner</h2><p class="sub">${esc(l.company)}</p><div class="stack">
+    <label class="f">Assigned to<select class="input" name="p">${partnerOpts(l.partnerId)}</select></label>
+    <div class="grid2"><label class="f">Backup owner<select class="input" name="b">${partnerOpts(l.backupPartnerId,'None')}</select></label>
+    <label class="f">Account manager<select class="input" name="am">${partnerOpts(l.accountManagerId,'None')}</select></label></div></div>`, 'Save', fd=>{
+    assignLead(id, String(fd.get('p')||''), String(fd.get('b')||''), String(fd.get('am')||'')); });
+}
+function assignLead(id, pid, backup, am){
+  const x = clone(S.leads[id]); const changed = (x.partnerId||'') !== (pid||'');
+  x.partnerId = pid || null; if(backup!==undefined) x.backupPartnerId = backup || null;
+  if(am!==undefined){ if((x.accountManagerId||'')!==(am||'')) x.activities = [...(x.activities||[]), {id:uid('a'), at:new Date().toISOString(), by:actor(), type:'Other', text: am ? `Account manager set to ${pname(am)}.` : 'Account manager removed.'}]; x.accountManagerId = am || null; }
+  if(changed) x.activities = [...(x.activities||[]), {id:uid('a'), at:new Date().toISOString(), by:actor(), type:'Other', text: pid ? `Assigned to ${pname(pid)}.` : 'Unassigned.'}];
+  saveLead(x, pid ? `Lead assigned to ${pname(pid)}.` : 'Lead unassigned.');
+}
+function stageSheet(id){
+  const l = S.leads[id];
+  openSheet(`<h2>Change status</h2><p class="sub">${esc(l.company)}, currently ${esc(ST[l.status].l)}</p><div class="svc">${STAGES.map(s=>`<button type="button" class="chip ${s.k===l.status?'blue':''}" style="padding:6px 12px;font-size:13.5px;cursor:pointer" data-a="pickstage" data-id="${id}" data-s="${s.k}">${esc(s.l)}</button>`).join('')}</div>`, '', ()=>{});
+}
+
+/* ---------- AI (phase 2, optional) ---------- */
+function leadBrief(l){
+  return JSON.stringify({ company:l.company, website:l.website, industry:l.industry, location:l.location, size:l.size, socials:l.socials, contacts:(l.contacts||[]).map(c=>({name:c.name,title:c.title})),
+    status:ST[l.status]?.l, priority:l.priority, score:l.score, services:l.services, estMonthlyValueGBP:l.value, probability:l.probability, source:l.source,
+    nextAction:l.next, today:today(), lastContacted:l.lastContacted,
+    activities:[...(l.activities||[])].sort((a,b)=>a.at.localeCompare(b.at)).slice(-25).map(a=>({date:a.at.slice(0,10),type:a.type,text:a.text})),
+    notes:(l.notes||[]).slice(-10).map(n=>({date:n.at.slice(0,10),kind:n.kind,text:n.text})), rejection:l.rejection, notNow:l.notNow });
+}
+const RPS_CONTEXT = 'You work for Rock Paper Scissors, a Croydon (UK) studio that grows brands on social media (management, strategy, content, paid social, websites, brand identity) and builds AI systems (custom AI software, automation, AI agents, chatbots, document processing, CRM integrations, AI consulting). Use UK English. Be concise, specific to the lead data given, never generic.';
+function aiCard(l){
+  const st = S.ai[l.id];
+  if(!S.cap.sample) return `<section class="card"><div class="card-h"><h2>AI assistant</h2><span class="chip">Off</span></div><p class="small muted">The AI assistant isn't switched on. An admin can enable it with the optional AI step in the setup guide.</p></section>`;
+  const busyNow = st?.loading;
+  let out = '';
+  if(st){
+    if(st.error) out = `<div class="ai-out" style="color:var(--red)">${esc(st.error)}</div>`;
+    else if(st.kind==='next' && st.data) out = `<div class="ai-out"><b>${esc(st.data.type)}: ${esc(st.data.text)}</b>\nDue ${fmtD(addDays(today(),+st.data.dueInDays||1))}\n\n${esc(st.data.reason)}</div>${canEdit(l)?`<button class="btn sm pri mt8" data-a="ai-apply-next" data-id="${l.id}">Use as next action</button>`:''}`;
+    else if(st.kind==='score' && st.data) out = `<div class="ai-out"><b>Suggested score ${esc(st.data.score)}/100 (${esc(st.data.priority)})</b>\n${(st.data.reasons||[]).map(r=>'• '+esc(r)).join('\n')}</div>${canEdit(l)?`<button class="btn sm pri mt8" data-a="ai-apply-score" data-id="${l.id}">Apply score and priority</button>`:''}`;
+    else out = `<div class="ai-out" id="ai-text-${l.id}">${esc(st.text || (busyNow?'Thinking…':''))}</div>${!busyNow && st.text && st.kind.startsWith('draft')?`<button class="btn sm mt8" data-a="ai-copy" data-id="${l.id}">Copy text</button>`:''}`;
+  }
+  return `<section class="card" id="ai-${l.id}"><div class="card-h"><h2 class="row" style="gap:7px">${ic('spark',18)} AI assistant</h2>${busyNow?'<span class="tiny muted">Working…</span>':''}</div>
+    <div class="row wrap" style="gap:6px">
+      <button class="btn sm" data-a="ai" data-k="summary" data-id="${l.id}" ${busyNow?'disabled':''}>Summarise</button>
+      <button class="btn sm" data-a="ai" data-k="next" data-id="${l.id}" ${busyNow?'disabled':''}>Suggest next action</button>
+      <button class="btn sm" data-a="ai" data-k="score" data-id="${l.id}" ${busyNow?'disabled':''}>Score lead</button>
+      <button class="btn sm" data-a="ai" data-k="research" data-id="${l.id}" ${busyNow?'disabled':''}>Research angle</button>
+    </div>
+    <div class="row mt8" style="gap:6px"><select class="input" id="ai-ch-${l.id}" style="width:auto;min-height:32px;font-size:13px" aria-label="Message channel">${opts([['email','Email'],['linkedin','LinkedIn message'],['whatsapp','WhatsApp'],['followup','Follow-up message']],'email')}</select><button class="btn sm" data-a="ai" data-k="draft" data-id="${l.id}" ${busyNow?'disabled':''}>Draft outreach</button></div>
+    ${out}</section>`;
+}
+function refreshAI(id){ const l = S.leads[id]; const box = document.getElementById('ai-'+id); if(box && l){ const tmp = document.createElement('div'); tmp.innerHTML = aiCard(l); box.replaceWith(tmp.firstElementChild); } }
+async function runAI(kind, id){
+  const sample = S.cap.sample, l = S.leads[id]; if(!sample || !l) return;
+  const brief = leadBrief(l);
+  const ch = kind==='draft' ? ($('#ai-ch-'+id)?.value||'email') : '';
+  S.ai[id] = {kind: kind==='draft' ? 'draft-'+ch : kind, loading:true, text:''}; refreshAI(id);
+  try{
+    if(kind==='next'){
+      const data = await sample.json(`${RPS_CONTEXT}\n\nLead data:\n${brief}\n\nRecommend the single best next action to move this lead forward. Return only JSON: {"type": one of ${JSON.stringify(NEXT_TYPES)}, "text": short imperative action under 12 words, "dueInDays": integer 0-30, "reason": one or two sentences grounded in the activity history}.`, {modelTier:'quick'});
+      S.ai[id] = {kind, data};
+    } else if(kind==='score'){
+      const data = await sample.json(`${RPS_CONTEXT}\n\nLead data:\n${brief}\n\nScore this prospect 0-100 on company fit, industry, marketing need, social presence, potential budget, decision maker identified, engagement, timing and service fit. Return only JSON: {"score": integer, "priority": "hot"|"warm"|"cold", "reasons": [3-5 short strings]}.`, {modelTier:'quick'});
+      S.ai[id] = {kind, data};
+    } else {
+      const prompts = {
+        summary:'Write a 2-4 sentence internal summary of this lead: fit, what they need, where things stand and what is blocking progress. No headings.',
+        research:'Based on the company details and your general knowledge (flag anything you are unsure of and do not invent facts about real people), give: a one-line company overview, likely decision-maker roles to target, 3 marketing or AI opportunities, which RPS services fit best, and a suggested outreach angle. Plain text with short labelled lines.',
+        'draft-email':'Draft a short personalised email (subject line + under 120 words) from the assigned RPS partner to the primary contact. Reference specifics from the notes and activity. No hype, no generic spam.',
+        'draft-linkedin':'Draft a LinkedIn message under 70 words to the primary contact, personal and specific to the notes. No hashtags.',
+        'draft-whatsapp':'Draft a friendly WhatsApp message under 50 words to the primary contact, appropriate to where the conversation is. No emojis overload.',
+        'draft-followup':'Draft a polite, specific follow-up message (under 80 words) that moves the conversation to the next concrete step, referencing the last activity.',
+      };
+      const key = kind==='draft' ? 'draft-'+ch : kind;
+      await sample(`${RPS_CONTEXT}\n\nLead data:\n${brief}\n\n${prompts[key]}`, {modelTier:'default', onText:({text})=>{ if(S.ai[id]){ S.ai[id].text = text; const el = $('#ai-text-'+id); if(el) el.textContent = text; } }})
+        .then(r=>{ S.ai[id] = {kind:key, text:r.text}; });
+    }
+  }catch(e){
+    S.ai[id] = {kind, error: e?.message ? 'AI request failed: '+e.message : "Couldn't get a response. Try again."};
+  }
+  S.ai[id].loading = false; refreshAI(id);
+}
+
+/* ---------- Global search dropdown ---------- */
+function showSearchResults(q){
+  const box = $('#sres'); if(!box) return;
+  if(!q.trim()){ box.innerHTML = ''; return; }
+  const L = scoped().filter(l=>matchSearch(l,q)).slice(0,7);
+  box.innerHTML = `<div class="sres">${L.length ? L.map(l=>`<a href="#/lead/${l.id}" data-a="sresgo"><span><b>${esc(l.company)}</b> <span class="muted small">${esc(contact(l).name||'')}</span></span>${stChip(l.status)}</a>`).join('') + `<a href="#/leads" data-a="sresall"><span class="small">See all results in Leads</span></a>` : `<a href="#/new"><span class="small">No match. Add "${esc(q)}" as a new lead</span></a>`}</div>`;
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-a]');
+  if(!e.target.closest('.searchwrap')) { const b = $('#sres'); if(b) b.innerHTML=''; }
+  if(!t) { if(S.ui.navOpen && !e.target.closest('.side')){ S.ui.navOpen=false; render(); } return; }
+  const a = t.dataset.a, id = t.dataset.id;
+  const L = id ? S.leads[id] : null;
+  switch(a){
+    case 'open': if(e.target.closest('select,button:not([data-a="open"]),a')) return; go('lead/'+id); break;
+    case 'kpi': { const k = t.dataset.k; S.ui.filters = {};
+      if(k==='today'||k==='overdue') return go('followups');
+      if(k==='reports') return go('reports');
+      if(k==='month') S.ui.filters.month = thisMonth();
+      if(k==='mine'){ if(myPid()){ if(isAdmin()) S.ui.pf = myPid(); S.ui.filters.state='active'; } }
+      if(k==='unassigned'){ S.ui.filters.partner='none'; S.ui.filters.state='active'; if(isAdmin()) S.ui.pf='all'; }
+      if(k==='hot'){ S.ui.filters.priority='hot'; S.ui.filters.state='active'; }
+      if(k==='meeting') S.ui.filters.status='meeting';
+      if(k==='proposal') S.ui.filters.status='proposal';
+      if(k==='converted'){ S.ui.filters.state='converted'; }
+      S.ui.search=''; go('leads'); break; }
+    case 'togglefilters': S.ui.showFilters = !S.ui.showFilters; render(); break;
+    case 'clearfilter': delete S.ui.filters[t.dataset.k]; render(); break;
+    case 'clearfilters': S.ui.filters = {}; S.ui.search=''; render(); break;
+    case 'export': exportSheet(); break;
+    case 'complete': completeSheet(id); break;
+    case 'resched': reschedSheet(id); break;
+    case 'editnext': nextSheet(id); break;
+    case 'owner': ownerSheet(id); break;
+    case 'stagesheet': stageSheet(id); break;
+    case 'pickstage': closeSheet(); requestStage(id, t.dataset.s); break;
+    case 'closesheet': closeSheet(); break;
+    case 'closesheet-bg': if(e.target===t) closeSheet(); break;
+    case 'setdate': { const f = t.closest('form'); const inp = f && (t.dataset.f ? f.querySelector(`[name="${t.dataset.f}"]`) : f.querySelector('input[type=date]')); if(inp) inp.value = t.dataset.v; break; }
+    case 'focus': { const el = document.getElementById(t.dataset.f); if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus({preventScroll:true}); } break; }
+    case 'qa': { const tp = t.dataset.t; S.keep['acttype-'+id] = tp==='LinkedIn'?'LinkedIn':tp; const sel = document.querySelector(`[data-keep="acttype-${id}"]`); if(sel) sel.value = S.keep['acttype-'+id];
+      setTimeout(()=>toast(`Log the ${tp==='Call'?'call':tp==='Email'?'email':'message'} when you're done.`,'',{a:'focus-act',id,label:'Log it'}),400); break; }
+    case 'focus-act': { const el = document.getElementById('act-'+id); if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus({preventScroll:true}); } else go('lead/'+id); break; }
+    case 'addact': { if(!L) return; const text = (S.keep['act-'+id]||'').trim(); if(!text) { toast('Write what happened first.','err'); document.getElementById('act-'+id)?.focus(); return; }
+      const type = S.keep['acttype-'+id] || 'Call'; const at = S.keep['actat-'+id] ? new Date(S.keep['actat-'+id]).toISOString() : new Date().toISOString();
+      const x = clone(L); x.activities = [...(x.activities||[]), {id:uid('a'), at, by:actor(), type, text}];
+      if(CONTACT_TYPES.includes(type) && (!x.lastContacted || at.slice(0,10) > x.lastContacted)) x.lastContacted = at.slice(0,10);
+      delete S.keep['act-'+id]; delete S.keep['actat-'+id];
+      saveLead(x, 'Activity added.');
+      if(x.next?.due && diffDays(x.next.due,today())<=0) setTimeout(()=>toast('Did that complete the next action?','',{a:'complete',id,label:'Complete it'}),350);
+      break; }
+    case 'addnote': { if(!L) return; const text = (S.keep['note-'+id]||'').trim(); if(!text){ toast('Write the note first.','err'); return; }
+      const x = clone(L); x.notes = [...(x.notes||[]), {id:uid('n'), at:new Date().toISOString(), by:actor(), kind:t.dataset.t, text}];
+      delete S.keep['note-'+id]; saveLead(x, t.dataset.t==='meeting'?'Meeting note added.':'Note added.'); break; }
+    case 'notetab': S.ui.noteTab[id] = t.dataset.t; render(); break;
+    case 'delete': openSheet(`<h2>Delete ${esc(L.company)}?</h2><p class="sub">This removes the lead, its activity and notes for everyone. It can't be undone.</p>`, 'Delete lead', ()=>{ deleteLead(id); closeSheet(); go('leads'); toast('Lead deleted.'); return 'keep'; });
+      setTimeout(()=>{ const b = $('#sheetForm button[type=submit]'); if(b){ b.classList.remove('pri'); b.classList.add('danger'); } },0); break;
+    case 'addcontact': collectForm(); S.form.draft.contacts.push({id:uid('c'),name:'',title:'',email:'',phone:'',whatsapp:'',linkedin:''}); render(); break;
+    case 'rmcontact': collectForm(); S.form.draft.contacts.splice(+t.dataset.i,1); render(); break;
+    case 'createanyway': submitLeadForm(true); break;
+    case 'viewdup': S.form = null; break;
+    case 'cancelform': S.form = null; break;
+    case 'calmove': S.ui.calMonth = shiftMonth(S.ui.calMonth, +t.dataset.n); render(); break;
+    case 'caltoday': S.ui.calMonth = thisMonth(); render(); break;
+    case 'calday': { const d = t.dataset.d, list = calEvents().filter(x=>x.d===d); openSheet(`<h2>${fmtD(d)}</h2><div class="stack mt12" style="gap:6px">${list.map(x=>`<button type="button" class="ev ${x.cls}" style="font-size:14px;padding:9px 11px" data-a="sheetopen" data-id="${x.id}">${esc(x.label)}</button>`).join('')}</div>`, '', ()=>{}); break; }
+    case 'sheetopen': closeSheet(); go('lead/'+id); break;
+    case 'filterpartner': S.ui.pf = id; toast(`Showing ${pname(id)} across the app.`); go('dashboard'); break;
+    case 'amleads': S.ui.filters = {am:id}; S.ui.pf='all'; go('leads'); break;
+    case 'partnerleads': S.ui.filters = isAdmin()?{partner:id}:{}; go('leads'); break;
+    case 'preview': S.ui.preview = id; toast(`Previewing as ${pname(id)}.`); go('dashboard'); break;
+    case 'endpreview': S.ui.preview = null; render(); break;
+    case 'takeseat': takeSeat(id); break;
+    case 'addmember': memberSheet(null); break;
+    case 'editmember': memberSheet(id); break;
+    case 'deactivate': closeSheet(); deactivateSheet(id); break;
+    case 'reactivate': S.settings.partners = team().map(x=>x.id===id?{...x,active:true}:x); saveSettings(`${pname(id)} reactivated.`); break;
+    case 'removemember': { const nm = pname(id); closeSheet(); if(leadCount(id)) return toast('This person still has leads. Deactivate instead.','err'); S.settings.partners = team().filter(x=>x.id!==id); saveSettings(`${nm} removed.`); break; }
+    case 'skipseat': S.ui.skipSeat = true; if(S.mode==='db') DB.updateProfile(S.uid,{member_id:null, skipped:true}).catch(()=>{}); render(); break;
+    case 'signout': sb?.auth.signOut(); break;
+    case 'forgot': S.auth = S.auth==='forgot' ? 'signedout' : 'signedout'; S.authMode = S.authMode==='forgot' ? 'signin' : 'forgot'; S.authMsg=''; render(); break;
+    case 'changepw': openSheet(`<h2>Change password</h2><p class="sub">At least 8 characters.</p><div class="stack"><label class="f req">New password<input class="input" type="password" name="pw" autocomplete="new-password"></label><label class="f req">Repeat new password<input class="input" type="password" name="pw2" autocomplete="new-password"></label></div>`, 'Change password', fd=>{ const a = String(fd.get('pw')||''), b = String(fd.get('pw2')||''); if(a.length<8) return 'Use at least 8 characters.'; if(a!==b) return "The passwords don't match."; sb.auth.updateUser({password:a}).then(({error})=>toast(error?"Couldn't change password: "+error.message:'Password changed.', error?'err':'')); }); break;
+    case 'addsource': { const v = $('#newsource')?.value.trim(); if(!v) return; if(S.settings.sources.some(s=>s.toLowerCase()===v.toLowerCase())) return toast('That source already exists.','err');
+      S.settings.sources = [...S.settings.sources, v]; saveSettings(`Lead source "${v}" added.`); break; }
+    case 'rmsource': S.settings.sources = S.settings.sources.filter(s=>s!==t.dataset.v); saveSettings('Lead source removed.'); break;
+    case 'loaddemo': openSheet(`<h2>Load demo data?</h2><p class="sub">Adds 42 fictional leads across all partners and stages${allLeads().length?'. Existing leads are kept':''}. Dates are set relative to today.</p>`, 'Load demo data', ()=>{ closeSheet(); loadDemo(); return 'keep'; }); break;
+    case 'clearall': openSheet(`<h2>Delete all ${allLeads().length} leads?</h2><p class="sub">Every lead, activity and note will be removed for everyone. This can't be undone. Type DELETE to confirm.</p><input class="input" name="confirm" autocomplete="off">`, 'Delete everything', fd=>{ if(String(fd.get('confirm')).trim()!=='DELETE') return 'Type DELETE to confirm.'; closeSheet(); clearAll(); return 'keep'; }); break;
+    case 'parsepaste': { const tx = $('#csvtext')?.value||''; if(!tx.trim()) return toast('Choose a file or paste CSV text first.','err'); prepareImport(tx); break; }
+    case 'doimport': runImport(); break;
+    case 'resetimport': S.importState = null; if(t.tagName==='BUTTON') render(); break;
+    case 'ai': runAI(t.dataset.k, id); break;
+    case 'ai-apply-next': { const d = S.ai[id]?.data; if(!d) return; const x = clone(L); x.next = {type:NEXT_TYPES.includes(d.type)?d.type:'Follow-up', text:d.text, due:addDays(today(),Math.max(0,+d.dueInDays||1)), reminder:'Morning of'}; delete S.ai[id]; saveLead(x, `Follow-up scheduled for ${fmtLong(x.next.due)}.`); break; }
+    case 'ai-apply-score': { const d = S.ai[id]?.data; if(!d) return; const x = clone(L); x.score = Math.max(0,Math.min(100,+d.score||0)); if(['hot','warm','cold'].includes(d.priority)) x.priority = d.priority; delete S.ai[id]; saveLead(x, `Lead score set to ${x.score}.`); break; }
+    case 'ai-copy': { const txt = S.ai[id]?.text||''; (navigator.clipboard?.writeText(txt)||Promise.reject()).then(()=>toast('Copied.')).catch(()=>{ const el = $('#ai-text-'+id); if(el){ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Text selected. Copy it with your keyboard or long-press.'); } }); break; }
+    case 'moremenu': openSheet(`<h2>More</h2><div class="stack mt12" style="gap:8px">${[['calendar','Calendar','cal'],['reports','Reports','reports'],['partners','Team','partners'],['settings','Settings','settings']].map(([k,l,i])=>`<button type="button" class="btn" style="justify-content:flex-start;min-height:46px" data-a="sheetgo" data-h="${k}">${ic(i)} ${l}</button>`).join('')}${isAdmin()?`<label class="f mt8">Show leads for<select class="input" data-c="pf">${opts([['all','Everyone'],...teamOpts(),['none','Unassigned']], S.ui.pf)}</select></label>`:''}</div>`, '', ()=>{}); break;
+    case 'sheetgo': closeSheet(); go(t.dataset.h); break;
+    case 'navtoggle': S.ui.navOpen = !S.ui.navOpen; render(); break;
+    case 'sresgo': case 'sresall': { const b = $('#sres'); if(b) b.innerHTML=''; if(a==='sresall') { S.ui.filters={}; } break; }
+  }
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && S.sheet) closeSheet();
+  if((e.key==='Enter'||e.key===' ') && e.target.matches('[role="link"][data-a="open"],[role="button"][data-a]')){ e.preventDefault(); e.target.click(); }
+  if(e.key==='Enter' && e.target.id==='gsearch'){ e.preventDefault(); S.ui.search = e.target.value; S.ui.filters={}; $('#sres').innerHTML=''; go('leads'); }
+  if(e.key==='Enter' && e.target.id==='newsource'){ e.preventDefault(); document.querySelector('[data-a="addsource"]')?.click(); }
+  if(e.key==='/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)){ e.preventDefault(); $('#gsearch')?.focus(); }
+});
+document.addEventListener('input', e=>{
+  const t = e.target;
+  if(t.dataset.keep){ S.keep[t.dataset.keep] = t.value; return; }
+  if(t.id==='gsearch'){ showSearchResults(t.value); return; }
+  if(t.id==='lsearch'){ S.ui.search = t.value; const g = $('#gsearch'); if(g) g.value = t.value; renderLeadResults(); return; }
+});
+document.addEventListener('change', e=>{
+  const t = e.target, c = t.dataset.c, id = t.dataset.id;
+  if(t.dataset.keep){ S.keep[t.dataset.keep] = t.value; return; }
+  if(t.id==='csvfile' && t.files?.[0]){ const r = new FileReader(); r.onload = ()=>prepareImport(String(r.result)); r.readAsText(t.files[0]); return; }
+  if(!c) return;
+  switch(c){
+    case 'pf': S.ui.pf = t.value; if(S.sheet) closeSheet(); render(); break;
+    case 'sort': S.ui.sort = t.value; renderLeadResults(); break;
+    case 'filter': if(t.value) S.ui.filters[t.dataset.k] = t.value; else delete S.ui.filters[t.dataset.k]; render(); break;
+    case 'dashMonth': S.ui.dashMonth = t.value; render(); break;
+    case 'repMonth': S.ui.repMonth = t.value; render(); break;
+    case 'status': requestStage(id, t.value); if(S.sheet) t.value = S.leads[id].status; break;
+    case 'move': requestStage(id, t.value); break;
+    case 'priority': { const x = clone(S.leads[id]); x.priority = t.value; saveLead(x, `Priority set to ${t.options[t.selectedIndex].text}.`); break; }
+    case 'assign': assignLead(id, t.value); break;
+    case 'target': { const v = Math.max(1,+t.value||1); S.settings.targets = {...(S.settings.targets||{}), [S.ui.repMonth]: v}; saveSettings(`Target for ${monthLabel(S.ui.repMonth)} set to ${v}.`); break; }
+    case 'deftarget': S.settings.defaultTarget = Math.max(1,+t.value||50); saveSettings('Default monthly target saved.'); break;
+    case 'pname': { const v = t.value.trim(); if(!v) { t.value = pname(id); return; } S.settings.partners = S.settings.partners.map(p=>p.id===id?{...p,name:v}:p); saveSettings(`Partner renamed to ${v}.`); break; }
+    case 'localrole': S.localRole = {...S.localRole, role:t.value}; persistLocal(); toast(`Now using the app as ${t.value==='admin'?'an admin':'a partner'}.`); render(); break;
+    case 'localseat': S.localRole = {...S.localRole, partnerId:t.value||null}; persistLocal(); render(); break;
+    case 'myseat': takeSeat(t.value||null); break;
+    case 'theme': if(t.value) document.documentElement.dataset.theme = t.value; else delete document.documentElement.dataset.theme; try{ localStorage.setItem('rps-theme', t.value); }catch(_){}; break;
+    case 'setseat': DB.updateProfile(t.dataset.u, {member_id:t.value||null, skipped:false}).then(loadProfiles).then(()=>{ render(); toast(t.value?`Login linked to ${pname(t.value)}.`:'Login unlinked.'); }).catch(e=>toast(writeErr(e),'err')); break;
+    case 'setadmin': DB.updateProfile(t.dataset.u, {is_admin:t.checked}).then(loadProfiles).then(()=>{ render(); toast(t.checked?'Admin access granted.':'Admin access removed.'); }).catch(e=>{ t.checked=!t.checked; toast(writeErr(e),'err'); }); break;
+    case 'impPartner': S.importState.partnerId = t.value; break;
+    case 'impMonth': S.importState.month = t.value; break;
+    case 'impDups': S.importState.includeDups = t.value==='include'; render(); break;
+  }
+});
+document.addEventListener('submit', e=>{
+  e.preventDefault();
+  if(e.target.id==='leadForm'){ submitLeadForm(false); return; }
+  if(e.target.id==='authForm'){ submitAuth(new FormData(e.target)); return; }
+  if(e.target.id==='sheetForm' && S.sheet){
+    const res = S.sheet.onSubmit(new FormData(e.target));
+    if(typeof res==='string' && res!=='keep'){ $('#sheetErr').textContent = res; return; }
+    if(res!=='keep') closeSheet();
+  }
+});
+document.addEventListener('focusout', ()=>{ setTimeout(()=>{ if(S.pending && !busy()) render(); }, 60); });
+// Drag & drop on the pipeline (desktop); touch devices use the stage menu on each card
+let dragId = null;
+document.addEventListener('dragstart', e=>{ const c = e.target.closest?.('[data-drag]'); if(!c) return; dragId = c.dataset.drag; c.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; try{ e.dataTransfer.setData('text/plain', dragId); }catch(_){} });
+document.addEventListener('dragend', e=>{ e.target.closest?.('[data-drag]')?.classList.remove('dragging'); document.querySelectorAll('.colm.drop').forEach(x=>x.classList.remove('drop')); });
+document.addEventListener('dragover', e=>{ const col = e.target.closest?.('[data-drop]'); if(!col || !dragId) return; e.preventDefault(); document.querySelectorAll('.colm.drop').forEach(x=>x!==col&&x.classList.remove('drop')); col.classList.add('drop'); });
+document.addEventListener('drop', e=>{ const col = e.target.closest?.('[data-drop]'); if(!col || !dragId) return; e.preventDefault(); col.classList.remove('drop'); const id = dragId; dragId = null; requestStage(id, col.dataset.drop); });
+window.addEventListener('hashchange', ()=>{ S.ui.navOpen = false; const r = route(); if(r.name!=='new' && r.sub!=='edit') S.form = null; if(S.sheet) closeSheet(); render(); });
+// Show the tablet nav toggle only when the rail is collapsed
+const mq = window.matchMedia('(max-width:1023px) and (min-width:720px)');
+const syncToggle = () => document.querySelectorAll('.navtoggle').forEach(b=>b.style.display = mq.matches ? '' : 'none');
+new MutationObserver(syncToggle).observe(document.getElementById('root'), {childList:true});
+mq.addEventListener?.('change', syncToggle);
+
+/* ---------- Actions needing the data layer ---------- */
+async function takeSeat(pid){
+  if(S.mode!=='db'){ S.localRole.partnerId = pid; persistLocal(); render(); return; }
+  S.members = {...S.members, [S.uid]:{...(S.members[S.uid]||{}), partnerId:pid||null, skipped:!pid}};
+  render();
+  try{ await DB.updateProfile(S.uid, {member_id:pid||null, skipped:!pid}); toast(pid ? `You're ${pname(pid)}.` : 'Seat cleared.'); }
+  catch(e){ toast(writeErr(e),'err'); }
+}
+async function loadDemo(){
+  const demo = Object.values(buildDemo());
+  toast('Loading demo data…');
+  const res = await bulkWrite(demo);
+  render(); toast(`${res.ok} demo leads loaded.${res.failed?` ${res.failed} failed.`:''}`, res.failed?'err':'');
+}
+async function clearAll(){
+  const ids = Object.keys(S.leads); S.leads = {}; render();
+  if(S.mode==='db'){ try{ await DB.deleteAll(); }catch(e){ toast(writeErr(e),'err'); } } else persistLocal();
+  toast('All leads deleted.');
+}
+
+/* ---------- Auth ---------- */
+function authView(){
+  const recovery = S.auth==='recovery', forgot = S.authMode==='forgot';
+  const msg = S.authMsg ? `<p class="small mt12" style="color:${S.authMsgErr?'var(--red)':'var(--green)'}">${esc(S.authMsg)}</p>` : '';
+  const body = recovery ? `<h1>Set a new password</h1><p class="muted">Choose a password with at least 8 characters.</p>
+      <div class="stack mt16"><label class="f">New password<input class="input" type="password" name="pw" autocomplete="new-password" required></label>
+      <label class="f">Repeat new password<input class="input" type="password" name="pw2" autocomplete="new-password" required></label>
+      <button class="btn pri" type="submit">Save password</button></div>`
+    : forgot ? `<h1>Reset your password</h1><p class="muted">We'll email you a link to set a new one.</p>
+      <div class="stack mt16"><label class="f">Email<input class="input" type="email" name="email" autocomplete="email" value="${esc(S.lastEmail||'')}" required></label>
+      <button class="btn pri" type="submit">Send reset link</button><button type="button" class="linkbtn" data-a="forgot">Back to sign in</button></div>`
+    : `<h1>Sign in</h1><p class="muted">Rock Paper Scissors growth pipeline. Ask an admin if you need a login.</p>
+      <div class="stack mt16"><label class="f">Email<input class="input" type="email" name="email" autocomplete="email" value="${esc(S.lastEmail||'')}" required></label>
+      <label class="f">Password<input class="input" type="password" name="password" autocomplete="current-password" required></label>
+      <button class="btn pri" type="submit">Sign in</button><button type="button" class="linkbtn" data-a="forgot">Forgot password?</button></div>`;
+  return `<div class="authwrap"><form class="card authcard" id="authForm" novalidate>${logo(30)}${body}${msg}</form></div>`;
+}
+async function submitAuth(fd){
+  const g = k => String(fd.get(k)||'').trim();
+  const say = (m, err=true) => { S.authMsg = m; S.authMsgErr = err; render(); };
+  if(S.auth==='recovery'){
+    if(g('pw').length<8) return say('Use at least 8 characters.');
+    if(g('pw')!==g('pw2')) return say("The passwords don't match.");
+    const { error } = await sb.auth.updateUser({ password:g('pw') });
+    if(error) return say(error.message);
+    S.authMsg=''; S.auth='in'; history.replaceState(null,'',location.pathname+'#/dashboard'); toast('Password saved.');
+    const { data } = await sb.auth.getSession(); if(data.session) startSession(data.session); return;
+  }
+  S.lastEmail = g('email');
+  if(!g('email')) return say('Enter your email.');
+  if(S.authMode==='forgot'){
+    const { error } = await sb.auth.resetPasswordForEmail(g('email'), { redirectTo: location.origin + location.pathname });
+    return error ? say(error.message) : say('If that email has a login, a reset link is on its way.', false);
+  }
+  if(!g('password')) return say('Enter your password.');
+  say('Signing in…', false);
+  const { error } = await sb.auth.signInWithPassword({ email:g('email'), password:g('password') });
+  if(error) say(error.message==='Invalid login credentials' ? 'That email and password combination is not recognised.' : error.message);
+}
+function makeAI(){
+  // Calls the optional "ai" Supabase Edge Function, which holds the Anthropic API key server-side.
+  const call = async prompt => {
+    const { data, error } = await sb.functions.invoke('ai', { body:{ prompt } });
+    if(error) throw { message: error.message || 'the AI function is not set up' };
+    if(data?.error) throw { message: data.error };
+    return data?.text || '';
+  };
+  const f = async (prompt, opts={}) => { const text = await call(prompt); opts.onText?.({text, delta:text}); return {text, truncated:false}; };
+  f.json = async prompt => { const t = (await call(prompt + '\n\nRespond with the JSON object only, no code fences or commentary.')).replace(/```json|```/g,'');
+    return JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}')+1)); };
+  return f;
+}
+
+/* ---------- Init ---------- */
+async function loadProfiles(){
+  const { data, error } = await sb.from('profiles').select('user_id,email,member_id,is_admin,skipped');
+  if(error) throw error;
+  const m = {}; (data||[]).forEach(p=>m[p.user_id] = {partnerId:p.member_id, skipped:p.skipped, email:p.email, isAdmin:p.is_admin});
+  S.members = m; S.membersLoaded = true; S.isOwnerAdmin = !!m[S.uid]?.isAdmin;
+}
+async function loadAll(){
+  const L = {}; let from = 0;
+  for(;;){ const { data, error } = await sb.from('leads').select('id,data').order('id').range(from, from+999); if(error) throw error;
+    data.forEach(r=>{ L[r.id] = r.data; }); if(data.length<1000) break; from += 1000; }
+  S.leads = L; S.leadsLoaded = true;
+  const { data:st, error:se } = await sb.from('settings').select('data').eq('id',1).maybeSingle(); if(se) throw se;
+  S.settings = {...clone(DEFAULT_SETTINGS), ...(st?.data||{})};
+  await loadProfiles();
+}
+function subscribe(){
+  if(channel) sb.removeChannel(channel);
+  channel = sb.channel('crm-live')
+    .on('postgres_changes', {event:'*', schema:'public', table:'leads'}, p=>{ if(p.eventType==='DELETE'){ delete S.leads[p.old?.id]; } else if(p.new?.data){ S.leads[p.new.id] = p.new.data; } scheduleRender(); })
+    .on('postgres_changes', {event:'*', schema:'public', table:'settings'}, p=>{ if(p.new?.data){ S.settings = {...clone(DEFAULT_SETTINGS), ...p.new.data}; scheduleRender(); } })
+    .on('postgres_changes', {event:'*', schema:'public', table:'profiles'}, ()=>{ loadProfiles().then(scheduleRender).catch(()=>{}); })
+    .subscribe();
+}
+async function autoLinkSeat(){
+  // If this login's email matches a team member's email, link them automatically.
+  const mine = S.members[S.uid]; if(!mine || mine.partnerId || mine.skipped) return;
+  const match = activeTeam().find(m=>m.email && m.email.toLowerCase()===String(S.email).toLowerCase());
+  if(match){ try{ await DB.updateProfile(S.uid, {member_id:match.id}); mine.partnerId = match.id; }catch(_){} }
+}
+async function startSession(session){
+  if(S.starting === session.user.id || (S.auth==='in' && S.uid===session.user.id && S.ready)) return;
+  S.starting = session.user.id;
+  S.uid = session.user.id; S.email = session.user.email; S.auth = 'in'; S.authMsg=''; S.ready = false; render();
+  try{ await loadAll(); await autoLinkSeat(); subscribe(); }
+  catch(e){ console.error(e); toast("Couldn't load data from the database. Check the setup steps.", 'err'); }
+  S.ready = true; S.starting = null; render();
+}
+async function init(){
+  try{ const th = localStorage.getItem('rps-theme'); if(th) document.documentElement.dataset.theme = th; }catch(_){}
+  const cfg = window.RPS_CONFIG || {};
+  const configured = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && !/YOUR[-_]/i.test(cfg.SUPABASE_URL + cfg.SUPABASE_ANON_KEY));
+  if(!configured || !window.supabase?.createClient){
+    // Demo mode: no database configured. Everything works, saved in this browser only.
+    S.mode = 'local'; S.setup = configured ? 'lib' : 'config';
+    try{ const saved = JSON.parse(localStorage.getItem(LS_KEY)||'null'); if(saved){ S.leads = saved.leads||{}; S.settings = {...clone(DEFAULT_SETTINGS), ...(saved.settings||{})}; S.localRole = saved.role||S.localRole; } }catch(_){}
+    if(!Object.keys(S.leads).length){ S.leads = buildDemo(); persistLocal(); }
+    S.ready = true; render(); return;
+  }
+  sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  S.mode = 'db';
+  S.cap = { sample: cfg.AI_ENABLED ? makeAI() : null };
+  sb.auth.onAuthStateChange((event, session)=>{
+    setTimeout(()=>{
+      if(event==='PASSWORD_RECOVERY'){ S.auth = 'recovery'; S.authMsg=''; render(); return; }
+      if(event==='SIGNED_OUT'){ if(channel){ sb.removeChannel(channel); channel = null; } S.auth = 'signedout'; S.authMode='signin'; S.leads = {}; S.members = {}; S.uid = null; S.ui.preview = null; render(); return; }
+      if(session && S.auth!=='recovery' && (event==='SIGNED_IN' || event==='INITIAL_SESSION')) startSession(session);
+      if(!session && event==='INITIAL_SESSION'){ S.auth = 'signedout'; render(); }
+    }, 0);
+  });
+  // Refresh when the tab comes back into view, so reassigned leads disappear or appear correctly.
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible' && S.auth==='in' && S.ready && !busy()) loadAll().then(render).catch(()=>{}); });
+}
+render();
+init();
+</script>
+</body>
+</html>
